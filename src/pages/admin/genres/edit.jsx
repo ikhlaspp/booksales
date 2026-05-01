@@ -15,7 +15,10 @@ export default function AdminGenreEdit() {
   useEffect(() => {
     const fetchGenre = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/genres/${id}`);
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`http://127.0.0.1:8000/api/genres/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         const data = response.data.data || response.data;
         setFormData({
           name: data.name || '',

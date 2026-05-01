@@ -1,7 +1,18 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation, Navigate, useNavigate } from "react-router-dom";
 
 export default function AdminLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem('token');
+  const role = localStorage.getItem('user_role');
+
+  if (!token) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+  if (role !== 'admin') {
+    return <Navigate to="/" replace />;
+  }
 
   const navigation = [
     { name: "Overview", href: "/admin" },
@@ -16,6 +27,11 @@ export default function AdminLayout() {
   const pageTitle = location.pathname === "/admin" 
     ? "Overview" 
     : location.pathname.split('/').pop().replace(/-/g, ' ');
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
 
   return (
     <div className="flex h-screen bg-gray-50 font-sans text-gray-900">
@@ -46,7 +62,7 @@ export default function AdminLayout() {
         </nav>
 
         <div className="p-4 border-t border-gray-100">
-          <button className="flex items-center w-full px-4 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors">
+          <button onClick={handleLogout} className="flex items-center w-full px-4 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors">
             <svg className="w-4 h-4 mr-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>

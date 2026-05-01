@@ -12,7 +12,10 @@ export default function AdminGenres() {
 
   const fetchGenres = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/genres');
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://127.0.0.1:8000/api/genres', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setGenres(response.data.data || response.data);
     } catch (error) {
       console.error("Error fetching genres:", error);
@@ -24,7 +27,10 @@ export default function AdminGenres() {
   const deleteGenre = async (id) => {
     if (window.confirm("Are you sure you want to delete this genre?")) {
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/genres/${id}`);
+        const token = localStorage.getItem('token');
+        await axios.delete(`http://127.0.0.1:8000/api/genres/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         fetchGenres();
         alert("Genre deleted successfully.");
       } catch (error) {

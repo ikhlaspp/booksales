@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 
-// Komponen ikon sederhana untuk demonstrasi
 const StatIcon = ({ type }) => {
     const icons = {
         cash: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />,
@@ -15,7 +14,6 @@ const StatIcon = ({ type }) => {
     );
 };
 
-// Komponen untuk menampilkan badge status yang berbeda warna
 const StatusBadge = ({ status }) => {
     const baseClasses = "px-2.5 py-0.5 text-xs font-medium rounded-full inline-block";
     const statusClasses = {
@@ -35,9 +33,7 @@ export default function Dashboard() {
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                // Memanggil endpoint dashboard dari Laravel API Anda
-                    // Pastikan key 'access_token' sesuai dengan yang Anda simpan di localStorage saat login
-                const token = localStorage.getItem('access_token'); 
+                const token = localStorage.getItem('token'); 
                 
                 const response = await fetch('http://localhost:8000/api/dashboard', {
                     headers: {
@@ -51,7 +47,6 @@ export default function Dashboard() {
                 }
                 const result = await response.json();
                 
-                // Sesuaikan 'result.data' dengan format respon JSON dari Laravel Anda
                 setStats(result.data?.stats || []);
                 setRecentTransactions(result.data?.recentTransactions || []);
             } catch (err) {

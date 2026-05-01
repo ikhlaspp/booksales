@@ -26,16 +26,12 @@ export default function Login() {
             const data = await response.json();
 
             if (response.ok) {
-                // Simpan token ke localStorage
-                localStorage.setItem('access_token', data.access_token);
-                
-                // Opsional: Anda juga bisa menyimpan role atau data user jika dibutuhkan
+                localStorage.setItem('token', data.access_token);
+                localStorage.setItem('user_id', data.user.id);
                 localStorage.setItem('user_role', data.role);
 
-                // Arahkan ke dashboard admin setelah sukses login
                 navigate('/admin');
             } else {
-                // Tampilkan pesan error dari API jika kredensial salah
                 setError(data.message || 'Login gagal. Silakan coba lagi.');
             }
         } catch (err) {
