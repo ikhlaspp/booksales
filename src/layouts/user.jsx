@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Outlet, Link, useLocation, Navigate, useNavigate } from "react-router-dom";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 
-export default function AdminLayout() {
+export default function UserLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
@@ -9,22 +9,19 @@ export default function AdminLayout() {
   const role = localStorage.getItem('user_role');
 
   const navigation = [
-    { name: "Overview", href: "/admin", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /> },
-    { name: "Users", href: "/admin/users", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /> },
-    { name: "Authors", href: "/admin/authors", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /> },
-    { name: "Genres", href: "/admin/genres", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /> },
-    { name: "Books", href: "/admin/books", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /> },
-    { name: "Transactions", href: "/admin/transactions", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /> },
-    { name: "Profile", href: "/admin/profile", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /> },
+    { name: "Browse Books", href: "/user", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /> },
+    { name: "My Transactions", href: "/user/transactions", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /> },
+    { name: "Profile", href: "/user/profile", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /> },
   ];
 
-  // Mendapatkan judul halaman dari URL
-  const pageTitle = location.pathname === "/admin" 
-    ? "Overview" 
+  const pageTitle = location.pathname === "/user" 
+    ? "Browse Books" 
     : location.pathname.split('/').pop().replace(/-/g, ' ');
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user_role');
+    localStorage.removeItem('user_id');
     navigate('/login');
   };
 
@@ -41,8 +38,7 @@ export default function AdminLayout() {
         
         <nav className={`flex-1 overflow-y-auto py-6 space-y-1.5 ${isSidebarExpanded ? 'px-4' : 'px-2'}`}>
           {navigation.map((item) => {
-            // Kondisi untuk menentukan item navigasi mana yang sedang aktif
-            const isActive = location.pathname === item.href || (item.href !== '/admin' && location.pathname.startsWith(item.href));
+            const isActive = location.pathname === item.href || (item.href !== '/user' && location.pathname.startsWith(item.href));
             return (
               <Link
                 key={item.name}
@@ -64,15 +60,14 @@ export default function AdminLayout() {
         </nav>
 
         <div className="p-4 border-t border-gray-100">
-          {/* Profile Section moved to sidebar bottom */}
           <div className={`flex items-center mb-3 ${isSidebarExpanded ? 'gap-3 px-3' : 'justify-center px-0'}`}>
             <div className="w-10 h-10 flex-shrink-0 rounded-full bg-gray-200 overflow-hidden ring-2 ring-blue-500/30">
-              <img src="https://ui-avatars.com/api/?name=Admin&background=eff6ff&color=2563eb" alt="Profile" className="w-full h-full object-cover" />
+              <img src="https://ui-avatars.com/api/?name=User&background=eff6ff&color=2563eb" alt="Profile" className="w-full h-full object-cover" />
             </div>
             {isSidebarExpanded && (
               <div className="flex flex-col overflow-hidden whitespace-nowrap">
-                <span className="text-sm font-bold text-gray-900">Admin</span>
-                <span className="text-xs font-medium text-gray-500 capitalize">{role || 'Administrator'}</span>
+                <span className="text-sm font-bold text-gray-900">Customer</span>
+                <span className="text-xs font-medium text-gray-500 capitalize">{role || 'User'}</span>
               </div>
             )}
           </div>
@@ -95,15 +90,9 @@ export default function AdminLayout() {
         {/* Top Header */}
         <header className="h-20 bg-white/80 backdrop-blur-md border-b border-gray-100 flex items-center justify-between px-8 sticky top-0 z-10">
           <div className="flex items-center">
-            <button className="md:hidden mr-4 text-gray-500 hover:text-gray-900">
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-            {/* Desktop Toggle Sidebar Button */}
             <button 
               onClick={() => setIsSidebarExpanded(!isSidebarExpanded)}
-              className="hidden md:block mr-4 text-gray-500 hover:text-blue-600 transition-colors"
+              className="mr-4 text-gray-500 hover:text-blue-600 transition-colors"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -112,14 +101,6 @@ export default function AdminLayout() {
             <h1 className="text-2xl font-bold text-gray-900 tracking-tight capitalize">
               {pageTitle}
             </h1>
-          </div>
-          
-          <div className="flex items-center space-x-5">
-            <button className="text-gray-400 hover:text-blue-600 transition-colors">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-            </button>
           </div>
         </header>
 
