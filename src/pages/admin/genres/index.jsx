@@ -5,9 +5,8 @@ import DeleteModal from '../../../components/DeleteModal';
 export default function AdminGenres() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3; // Batas item per halaman (diatur 3 agar Anda bisa mencoba pagination-nya)
+  const itemsPerPage = 3;
 
-  // Menggunakan State untuk menyimpan data
   const [genres, setGenres] = useState([
     { id: 1, name: "Fiksi Ilmiah", description: "Buku yang mengeksplorasi konsep futuristik.", total_books: 45 },
     { id: 2, name: "Fantasi", description: "Dunia sihir, makhluk mitologis, dan petualangan epik.", total_books: 32 },
@@ -16,7 +15,6 @@ export default function AdminGenres() {
     { id: 5, name: "Pengembangan Diri", description: "Buku panduan untuk motivasi dan produktivitas.", total_books: 55 },
   ]);
 
-  // State untuk Pop-up Modal Delete
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -30,7 +28,6 @@ export default function AdminGenres() {
     if (!itemToDelete) return;
     setIsDeleting(true);
     
-    // Simulasi loading API hapus data
     setTimeout(() => {
       setGenres(prev => prev.filter(genre => genre.id !== itemToDelete.id));
       setIsDeleting(false);
@@ -39,18 +36,15 @@ export default function AdminGenres() {
     }, 800);
   };
 
-  // Logika Pencarian
   const filteredGenres = genres
     .filter(genre => genre.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
-  // Menghitung Item untuk Halaman Saat Ini
   const totalPages = Math.ceil(filteredGenres.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentGenres = filteredGenres.slice(startIndex, startIndex + itemsPerPage);
 
   return (
     <div className="space-y-6">
-      {/* Header & Add Button */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Kelola Genres</h2>
@@ -67,9 +61,7 @@ export default function AdminGenres() {
         </Link>
       </div>
 
-      {/* Table Card */}
       <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden flex flex-col">
-        {/* Toolbar: Search */}
         <div className="p-4 border-b border-gray-100 bg-gray-50/50 flex items-center">
           <div className="relative w-full sm:max-w-md">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -82,7 +74,7 @@ export default function AdminGenres() {
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
-                setCurrentPage(1); // Reset ke halaman 1 saat melakukan pencarian
+                setCurrentPage(1);
               }}
               className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-xl leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 sm:text-sm transition-colors" 
               placeholder="Cari genre..." 
@@ -90,7 +82,6 @@ export default function AdminGenres() {
           </div>
         </div>
 
-        {/* Data Table */}
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -146,7 +137,6 @@ export default function AdminGenres() {
           </table>
         </div>
 
-        {/* Pagination */}
         <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-gray-50/30">
           <div className="hidden sm:block text-sm text-gray-500">
             Menampilkan <span className="font-semibold text-gray-900">{filteredGenres.length === 0 ? 0 : startIndex + 1}</span> ke <span className="font-semibold text-gray-900">{Math.min(startIndex + itemsPerPage, filteredGenres.length)}</span> dari <span className="font-semibold text-gray-900">{filteredGenres.length}</span> hasil
@@ -170,7 +160,6 @@ export default function AdminGenres() {
         </div>
       </div>
 
-      {/* Modal Hapus */}
       <DeleteModal 
         isOpen={isDeleteModalOpen}
         isLoading={isDeleting}

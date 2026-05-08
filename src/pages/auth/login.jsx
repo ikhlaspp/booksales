@@ -58,11 +58,20 @@ export default function Login() {
               throw new Error('Format response dari server tidak valid (token tidak ditemukan).');
           }
 
+          const userRole = data?.role || user?.role || 'user'; 
+          
           localStorage.setItem('token', token);
           localStorage.setItem('user_id', user?.id || '');
-          localStorage.setItem('user_role', data?.role || user?.role || 'admin');
-          
-          const from = location.state?.from?.pathname || '/admin';
+          localStorage.setItem('user_role', userRole);
+
+          let defaultPath = '/';
+          if (userRole === 'admin') {
+              defaultPath = '/admin';
+          } else if (userRole === 'user' || userRole === 'customer') {
+              defaultPath = '/user/profile'; 
+          }
+
+          const from = location.state?.from?.pathname || defaultPath;
           navigate(from, { replace: true });
           
       } catch (error) {
@@ -73,16 +82,14 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-4 font-sans text-gray-900">
+    <div className="flex-1 bg-white flex items-center justify-center p-4 py-12 font-sans text-gray-900">
         <div className="max-w-md w-full">
-            {/* Logo / Brand Mark */}
             <div className="flex justify-center mb-6">
                 <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
                     <span className="text-white font-bold text-3xl">B</span>
                 </div>
             </div>
             
-            {/* Header */}
             <div className="text-center mb-10">
                 <h2 className="text-3xl font-bold mb-2 tracking-tight">Selamat Datang</h2>
                 <p className="text-gray-500">Silakan masukkan detail akun Anda untuk masuk.</p>

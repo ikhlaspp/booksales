@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 export default function Profile() {
-  // Mengambil role dari localStorage
   const role = localStorage.getItem('user_role') || 'user';
   const [activeTab, setActiveTab] = useState('info');
 
@@ -11,7 +10,6 @@ export default function Profile() {
     confirmPassword: ''
   });
 
-  // Data Dummy untuk simulasi
   const userInfo = {
     name: role === 'admin' ? 'Administrator' : 'Customer User',
     email: role === 'admin' ? 'admin@booksales.com' : 'user@booksales.com',
@@ -25,44 +23,40 @@ export default function Profile() {
 
   const handlePasswordChange = (e) => {
     e.preventDefault();
-    // Logika ganti password api di sini
     alert('Password berhasil diperbarui!');
     setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-8">
-      {/* Sidebar Lokal Halaman Profil */}
-      <aside className="w-full md:w-64 flex-shrink-0">
-        <h2 className="text-xl font-bold text-gray-900 mb-4 tracking-tight">Pengaturan Profil</h2>
-        <nav className="flex flex-col space-y-1">
+    <div className="flex flex-col gap-8">
+      <div className="w-full">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6 tracking-tight border-b border-gray-100 pb-4">Pengaturan Profil</h2>
+        <nav className="flex flex-row space-x-2 overflow-x-auto pb-2">
           <button 
             onClick={() => setActiveTab('info')}
-            className={`flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-colors text-left ${activeTab === 'info' ? 'bg-blue-50 text-blue-700 shadow-sm' : 'text-gray-600 hover:bg-gray-50'}`}
+            className={`flex items-center px-5 py-3 text-sm font-medium rounded-xl transition-colors whitespace-nowrap ${activeTab === 'info' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 bg-gray-50 hover:bg-gray-100'}`}
           >
             Informasi Akun
           </button>
           <button 
             onClick={() => setActiveTab('password')}
-            className={`flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-colors text-left ${activeTab === 'password' ? 'bg-blue-50 text-blue-700 shadow-sm' : 'text-gray-600 hover:bg-gray-50'}`}
+            className={`flex items-center px-5 py-3 text-sm font-medium rounded-xl transition-colors whitespace-nowrap ${activeTab === 'password' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 bg-gray-50 hover:bg-gray-100'}`}
           >
             Ganti Password
           </button>
           
-          {/* Riwayat Peminjaman HANYA untuk role non-admin */}
           {role !== 'admin' && (
             <button 
               onClick={() => setActiveTab('history')}
-              className={`flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-colors text-left ${activeTab === 'history' ? 'bg-blue-50 text-blue-700 shadow-sm' : 'text-gray-600 hover:bg-gray-50'}`}
+              className={`flex items-center px-5 py-3 text-sm font-medium rounded-xl transition-colors whitespace-nowrap ${activeTab === 'history' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 bg-gray-50 hover:bg-gray-100'}`}
             >
               Riwayat Peminjaman
             </button>
           )}
         </nav>
-      </aside>
+      </div>
 
-      {/* Area Konten Profil */}
-      <div className="flex-1 bg-white md:border-l md:border-gray-100 md:pl-8">
+      <div className="w-full bg-white">
         {activeTab === 'info' && (
           <div className="max-w-xl space-y-6">
             <h3 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3">Detail Informasi Akun</h3>

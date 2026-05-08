@@ -1,109 +1,163 @@
+﻿﻿import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
 export default function Navbar() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  const token = localStorage.getItem('token');
+  const role = localStorage.getItem('user_role');
+
+  const navLinks = [
+    { name: 'Beranda', href: '/' },
+    { name: 'Katalog Buku', href: '/books' },
+    { name: 'Tentang Kami', href: '/about' },
+  ];
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user_role');
+    localStorage.removeItem('user_id');
+    setIsMobileOpen(false);
+    navigate('/login');
+  };
+
+  const isActive = (href) => {
+    return location.pathname === href || (href !== '/' && location.pathname.startsWith(href));
+  };
+
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [location.pathname]);
+
+  const currentRole = role || 'Customer';
+
   return (
-    <>
-      <header>
-        <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
-          <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-            <a href="#" className="flex items-center">
-              <img
-                src="https://flowbite.com/docs/images/logo.svg"
-                className="mr-3 h-6 sm:h-9"
-                alt="Flowbite Logo"
-              />
-              <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-                Flowbite
-              </span>
-            </a>
-            <div className="flex items-center lg:order-2">
-              <a
-                href="login"
-                className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
-              >
-                Masuk
-              </a>
-              <a
-                href="register"
-                className="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800"
-              >
-                Bergabung
-              </a>
-              <button
-                data-collapse-toggle="mobile-menu-2"
-                type="button"
-                className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                aria-controls="mobile-menu-2"
-                aria-expanded="false"
-              >
-                <span className="sr-only">Open main menu</span>
-                <svg
-                  className="w-6 h-6"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-                <svg
-                  className="hidden w-6 h-6"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-              </button>
+    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
+      <nav className="mx-auto max-w-7xl px-6 md:px-12">
+        <div className="flex items-center justify-between h-20">
+          
+          <Link to="/" className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20">
+              <span className="text-white font-bold text-xl">B</span>
             </div>
-            <div
-              className="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1"
-              id="mobile-menu-2"
+            <span className="text-xl font-bold tracking-tight text-gray-900">BookSales.</span>
+          </Link>
+
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                to={link.href}
+                className={`text-sm font-semibold transition-colors ${
+                  isActive(link.href)
+                    ? 'text-blue-600'
+                    : 'text-gray-500 hover:text-gray-900'
+                }`}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
+
+          <div className="hidden md:flex items-center">
+            {token ? (
+              <div className="flex items-center bg-gray-900 p-1.5 pr-5 rounded-2xl shadow-md">
+                <Link to={role === 'admin' ? '/admin' : '/user/profile'} className="flex items-center gap-3 group">
+                  <div className="w-8 h-8 rounded-xl bg-gray-800 flex items-center justify-center overflow-hidden ring-2 ring-gray-700 group-hover:ring-gray-500 transition-all">
+                    <img src={`https://ui-avatars.com/api/?name=${currentRole}&background=374151&color=f9fafb`} alt="Profile" className="w-full h-full object-cover" />
+                  </div>
+                  <span className="text-sm font-bold text-white capitalize group-hover:text-gray-200 transition-colors">
+                    {currentRole}
+                  </span>
+                </Link>
+                <div className="w-px h-4 bg-gray-700 mx-4"></div>
+                <button
+                  onClick={handleLogout}
+                  className="text-sm font-bold text-red-400 hover:text-red-300 transition-colors"
+                >
+                  Keluar
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-5">
+                <Link to="/register" className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors">
+                  Daftar
+                </Link>
+                <Link to="/login" className="px-6 py-2.5 bg-gray-900 text-white text-sm font-bold rounded-2xl hover:bg-gray-800 transition-all shadow-md">
+                  Masuk
+                </Link>
+              </div>
+            )}
+          </div>
+
+          <div className="flex md:hidden">
+            <button
+              onClick={() => setIsMobileOpen((value) => !value)}
+              className="text-gray-500 hover:text-gray-900 p-2"
+              aria-label="Buka menu navigasi"
             >
-              <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-                <li>
-                  <a
-                    href="/"
-                    className="block py-2 pr-4 pl-3 text-white rounded bg-indigo-700 lg:bg-transparent lg:text-indigo-700 lg:p-0 dark:text-white"
-                    aria-current="page"
-                  >
-                    Home
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="books"
-                    className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-indigo-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
-                  >
-                    Buku Terlaris
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-indigo-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
-                  >
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-indigo-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
-                  >
-                    Layanan
-                  </a>
-                </li>
-              </ul>
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                {isMobileOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {isMobileOpen && (
+          <div className="md:hidden py-4 border-t border-gray-100">
+            <div className="flex flex-col space-y-4">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className={`text-base font-semibold px-2 ${
+                    isActive(link.href) ? 'text-blue-600' : 'text-gray-600'
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+
+              <div className="border-t border-gray-100 pt-4 mt-2">
+                {token ? (
+                  <div className="flex flex-col space-y-4 px-2">
+                    <Link to={role === 'admin' ? '/admin' : '/user/profile'} className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
+                        <img src={`https://ui-avatars.com/api/?name=${currentRole}&background=eff6ff&color=2563eb`} alt="Profile" className="w-full h-full object-cover" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-gray-900 capitalize">{currentRole}</div>
+                        <div className="text-xs text-gray-500">Lihat Profil</div>
+                      </div>
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="text-left text-base font-semibold text-red-500"
+                    >
+                      Keluar
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col space-y-3 px-2">
+                    <Link to="/login" className="w-full py-3 bg-gray-900 text-white text-center text-base font-bold rounded-xl">
+                      Masuk
+                    </Link>
+                    <Link to="/register" className="w-full py-3 bg-gray-100 text-gray-900 text-center text-base font-bold rounded-xl border border-gray-200">
+                      Daftar Akun Baru
+                    </Link>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </nav>
-      </header>
-    </>
+        )}
+      </nav>
+    </header>
   );
 }

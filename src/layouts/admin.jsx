@@ -18,7 +18,6 @@ export default function AdminLayout() {
     { name: "Profile", href: "/admin/profile", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /> },
   ];
 
-  // Mendapatkan judul halaman dari URL
   const pageTitle = location.pathname === "/admin" 
     ? "Overview" 
     : location.pathname.split('/').pop().replace(/-/g, ' ');
@@ -30,7 +29,6 @@ export default function AdminLayout() {
 
   return (
     <div className="flex h-screen bg-gray-50 font-sans text-gray-900">
-      {/* Sidebar */}
       <aside className={`bg-white border-r border-gray-200 flex-col hidden md:flex transition-all duration-300 ${isSidebarExpanded ? 'w-64' : 'w-20'}`}>
         <div className={`h-20 flex items-center border-b border-gray-100 ${isSidebarExpanded ? 'px-6' : 'justify-center'}`}>
           <div className="w-10 h-10 flex-shrink-0 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
@@ -41,7 +39,6 @@ export default function AdminLayout() {
         
         <nav className={`flex-1 overflow-y-auto py-6 space-y-1.5 ${isSidebarExpanded ? 'px-4' : 'px-2'}`}>
           {navigation.map((item) => {
-            // Kondisi untuk menentukan item navigasi mana yang sedang aktif
             const isActive = location.pathname === item.href || (item.href !== '/admin' && location.pathname.startsWith(item.href));
             return (
               <Link
@@ -64,7 +61,6 @@ export default function AdminLayout() {
         </nav>
 
         <div className="p-4 border-t border-gray-100">
-          {/* Profile Section moved to sidebar bottom */}
           <div className={`flex items-center mb-3 ${isSidebarExpanded ? 'gap-3 px-3' : 'justify-center px-0'}`}>
             <div className="w-10 h-10 flex-shrink-0 rounded-full bg-gray-200 overflow-hidden ring-2 ring-blue-500/30">
               <img src="https://ui-avatars.com/api/?name=Admin&background=eff6ff&color=2563eb" alt="Profile" className="w-full h-full object-cover" />
@@ -90,9 +86,7 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden relative">
-        {/* Top Header */}
         <header className="h-20 bg-white/80 backdrop-blur-md border-b border-gray-100 flex items-center justify-between px-8 sticky top-0 z-10">
           <div className="flex items-center">
             <button className="md:hidden mr-4 text-gray-500 hover:text-gray-900">
@@ -100,7 +94,6 @@ export default function AdminLayout() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            {/* Desktop Toggle Sidebar Button */}
             <button 
               onClick={() => setIsSidebarExpanded(!isSidebarExpanded)}
               className="hidden md:block mr-4 text-gray-500 hover:text-blue-600 transition-colors"
@@ -123,7 +116,6 @@ export default function AdminLayout() {
           </div>
         </header>
 
-        {/* Main Viewport */}
         <main className="flex-1 overflow-y-auto bg-slate-50 p-6 md:p-8">
           <div className="max-w-7xl mx-auto">
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 min-h-[500px]">

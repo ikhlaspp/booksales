@@ -80,14 +80,12 @@ export default function Register() {
     return (
         <div className="min-h-screen bg-white flex items-center justify-center p-4 font-sans text-gray-900">
             <div className="max-w-md w-full py-8">
-                {/* Logo / Brand Mark */}
                 <div className="flex justify-center mb-6">
                     <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
                         <span className="text-white font-bold text-3xl">B</span>
                     </div>
                 </div>
                 
-                {/* Header */}
                 <div className="text-center mb-10">
                     <h2 className="text-3xl font-bold mb-2 tracking-tight">Buat Akun Baru</h2>
                     <p className="text-gray-500">Bergabunglah dan nikmati kemudahannya.</p>
