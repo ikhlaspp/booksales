@@ -28,13 +28,13 @@ export default function AdminLayout() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 font-sans text-gray-900">
-      <aside className={`bg-white border-r border-gray-200 flex-col hidden md:flex transition-all duration-300 ${isSidebarExpanded ? 'w-64' : 'w-20'}`}>
-        <div className={`h-20 flex items-center border-b border-gray-100 ${isSidebarExpanded ? 'px-6' : 'justify-center'}`}>
-          <div className="w-10 h-10 flex-shrink-0 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-            <span className="text-white font-bold text-xl">B</span>
+    <div className="flex h-screen bg-[#f7f7f7] font-sans text-[#222222]">
+      <aside className={`bg-[#ffffff] border-r border-[#ebebeb] flex-col hidden md:flex transition-all duration-300 ${isSidebarExpanded ? 'w-64' : 'w-20'}`}>
+        <div className={`h-20 flex items-center border-b border-[#ebebeb] ${isSidebarExpanded ? 'px-6' : 'justify-center'}`}>
+          <div className="w-10 h-10 flex-shrink-0 bg-[#ff385c] rounded-full flex items-center justify-center shadow-lg shadow-[#ff385c]/30">
+            <span className="text-[#ffffff] font-bold text-xl">B</span>
           </div>
-          {isSidebarExpanded && <span className="text-xl font-bold tracking-tight text-gray-900 ml-3 whitespace-nowrap overflow-hidden">BookSales.</span>}
+          {isSidebarExpanded && <span className="text-xl font-bold tracking-tight text-[#222222] ml-3 whitespace-nowrap overflow-hidden">BookSales.</span>}
         </div>
         
         <nav className={`flex-1 overflow-y-auto py-6 space-y-1.5 ${isSidebarExpanded ? 'px-4' : 'px-2'}`}>
@@ -44,10 +44,10 @@ export default function AdminLayout() {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`flex items-center py-3 rounded-xl text-sm font-semibold no-underline transition-all duration-200 ${
+                className={`flex items-center py-3 rounded-[8px] text-[14px] font-medium no-underline transition-all duration-200 ${
                   isActive
-                    ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30'
-                    : 'text-gray-500 hover:bg-blue-50 hover:text-blue-700'
+                    ? 'bg-[#ff385c] text-[#ffffff] shadow-md shadow-[#ff385c]/30'
+                    : 'text-[#6a6a6a] hover:bg-[#f7f7f7] hover:text-[#222222]'
                 } ${isSidebarExpanded ? 'px-4' : 'justify-center px-0'}`}
                 title={!isSidebarExpanded ? item.name : undefined}
               >
@@ -60,25 +60,25 @@ export default function AdminLayout() {
           })}
         </nav>
 
-        <div className="p-4 border-t border-gray-100">
+        <div className="p-4 border-t border-[#ebebeb]">
           <div className={`flex items-center mb-3 ${isSidebarExpanded ? 'gap-3 px-3' : 'justify-center px-0'}`}>
-            <div className="w-10 h-10 flex-shrink-0 rounded-full bg-gray-200 overflow-hidden ring-2 ring-blue-500/30">
+            <div className="w-10 h-10 flex-shrink-0 rounded-full bg-[#ebebeb] overflow-hidden ring-2 ring-[#ff385c]/30">
               <img src="https://ui-avatars.com/api/?name=Admin&background=eff6ff&color=2563eb" alt="Profile" className="w-full h-full object-cover" />
             </div>
             {isSidebarExpanded && (
               <div className="flex flex-col overflow-hidden whitespace-nowrap">
-                <span className="text-sm font-bold text-gray-900">Admin</span>
-                <span className="text-xs font-medium text-gray-500 capitalize">{role || 'Administrator'}</span>
+                <span className="text-[14px] font-bold text-[#222222]">Admin</span>
+                <span className="text-[12px] font-medium text-[#6a6a6a] capitalize">{role || 'Administrator'}</span>
               </div>
             )}
           </div>
           
           <button 
             onClick={handleLogout} 
-            className={`flex items-center w-full py-3 text-sm font-semibold no-underline text-gray-500 rounded-xl hover:bg-red-50 hover:text-red-600 transition-colors group ${isSidebarExpanded ? 'px-4' : 'justify-center px-0'}`}
+            className={`flex items-center w-full py-3 text-[14px] font-medium no-underline text-[#6a6a6a] rounded-[8px] hover:bg-[#ffd1da] hover:text-[#c13515] transition-colors group ${isSidebarExpanded ? 'px-4' : 'justify-center px-0'}`}
             title={!isSidebarExpanded ? "Sign out" : undefined}
           >
-            <svg className={`w-5 h-5 flex-shrink-0 text-gray-400 group-hover:text-red-500 transition-colors ${isSidebarExpanded ? 'mr-3' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className={`w-5 h-5 flex-shrink-0 text-[#6a6a6a] group-hover:text-[#c13515] transition-colors ${isSidebarExpanded ? 'mr-3' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
             {isSidebarExpanded && <span className="whitespace-nowrap">Sign out</span>}
@@ -87,28 +87,28 @@ export default function AdminLayout() {
       </aside>
 
       <div className="flex-1 flex flex-col overflow-hidden relative">
-        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-gray-100 flex items-center justify-between px-8 sticky top-0 z-10">
+        <header className="h-20 bg-[#ffffff]/80 backdrop-blur-md border-b border-[#ebebeb] flex items-center justify-between px-8 sticky top-0 z-10">
           <div className="flex items-center">
-            <button className="md:hidden mr-4 text-gray-500 hover:text-gray-900">
+            <button className="md:hidden mr-4 text-[#6a6a6a] hover:text-[#222222]">
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
             <button 
               onClick={() => setIsSidebarExpanded(!isSidebarExpanded)}
-              className="hidden md:block mr-4 text-gray-500 hover:text-blue-600 transition-colors"
+              className="hidden md:block mr-4 text-[#6a6a6a] hover:text-[#ff385c] transition-colors"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight capitalize">
+            <h1 className="text-[22px] font-bold text-[#222222] tracking-[-0.44px] capitalize">
               {pageTitle}
             </h1>
           </div>
           
           <div className="flex items-center space-x-5">
-            <button className="text-gray-400 hover:text-blue-600 transition-colors">
+            <button className="text-[#6a6a6a] hover:text-[#ff385c] transition-colors">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
@@ -116,9 +116,9 @@ export default function AdminLayout() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto bg-slate-50 p-6 md:p-8">
+        <main className="flex-1 overflow-y-auto bg-[#f7f7f7] p-6 md:p-8">
           <div className="max-w-7xl mx-auto">
-            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 min-h-[500px]">
+            <div className="bg-[#ffffff] rounded-[14px] shadow-[0_2px_6px_rgba(0,0,0,0.04)] border border-[#ebebeb] p-8 min-h-[500px]">
               <Outlet />
             </div>
           </div>

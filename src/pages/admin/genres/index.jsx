@@ -47,12 +47,12 @@ export default function AdminGenres() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Kelola Genres</h2>
-          <p className="text-sm text-gray-500 mt-1">Kategori dan klasifikasi buku pada sistem.</p>
+          <h2 className="text-[22px] font-bold text-[#222222] tracking-[-0.44px]">Kelola Genres</h2>
+          <p className="text-[14px] text-[#6a6a6a] mt-1">Kategori dan klasifikasi buku pada sistem.</p>
         </div>
         <Link 
           to="/admin/genres/create" 
-          className="inline-flex items-center px-4 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 shadow-md shadow-blue-500/30 transition-all duration-200"
+          className="inline-flex items-center px-[24px] py-[14px] bg-[#ff385c] text-[#ffffff] text-[16px] font-medium rounded-[8px] hover:bg-[#e00b41] transition-colors h-[48px]"
         >
           <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -61,11 +61,11 @@ export default function AdminGenres() {
         </Link>
       </div>
 
-      <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden flex flex-col">
-        <div className="p-4 border-b border-gray-100 bg-gray-50/50 flex items-center">
+      <div className="bg-[#ffffff] border border-[#ebebeb] rounded-[14px] shadow-[0_2px_6px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col">
+        <div className="p-4 border-b border-[#ebebeb] bg-[#ffffff] flex items-center">
           <div className="relative w-full sm:max-w-md">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="h-5 w-5 text-[#6a6a6a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
@@ -76,7 +76,7 @@ export default function AdminGenres() {
                 setSearchTerm(e.target.value);
                 setCurrentPage(1);
               }}
-              className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-xl leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 sm:text-sm transition-colors" 
+              className="block w-full h-[48px] pl-10 pr-3 border border-[#dddddd] rounded-[8px] leading-5 bg-[#ffffff] text-[#222222] placeholder-[#6a6a6a] focus:outline-none focus:border-2 focus:border-[#222222] text-[14px] transition-colors" 
               placeholder="Cari genre..." 
             />
           </div>
@@ -85,38 +85,38 @@ export default function AdminGenres() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-white border-b border-gray-100">
-                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider w-20">ID</th>
-                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Nama Genre & Deskripsi</th>
-                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">Buku Tertaut</th>
-                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Aksi</th>
+              <tr className="bg-[#f7f7f7] border-b border-[#ebebeb]">
+                <th className="px-6 py-4 text-[12px] font-bold text-[#6a6a6a] uppercase tracking-wider w-20">ID</th>
+                <th className="px-6 py-4 text-[12px] font-bold text-[#6a6a6a] uppercase tracking-wider">Nama Genre & Deskripsi</th>
+                <th className="px-6 py-4 text-[12px] font-bold text-[#6a6a6a] uppercase tracking-wider text-center">Buku Tertaut</th>
+                <th className="px-6 py-4 text-[12px] font-bold text-[#6a6a6a] uppercase tracking-wider text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-[#ebebeb]">
               {currentGenres.length > 0 ? (
                 currentGenres.map((genre) => (
-                  <tr key={genre.id} className="hover:bg-blue-50/30 transition-colors duration-150 group">
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">#{genre.id}</td>
+                  <tr key={genre.id} className="hover:bg-[#f7f7f7] transition-colors duration-150 group">
+                    <td className="px-6 py-4 text-[14px] font-medium text-[#222222]">#{genre.id}</td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
-                        <span className="text-sm font-bold text-blue-600">{genre.name}</span>
-                        <span className="text-xs text-gray-500 mt-0.5 truncate max-w-md">{genre.description}</span>
+                        <span className="text-[14px] font-bold text-[#222222]">{genre.name}</span>
+                        <span className="text-[14px] text-[#6a6a6a] mt-0.5 truncate max-w-md">{genre.description}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm font-medium text-gray-600 text-center">
-                      <span className="bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 rounded-xl text-xs font-bold shadow-sm">{genre.total_books} Buku</span>
+                    <td className="px-6 py-4 text-[14px] font-medium text-[#222222] text-center">
+                      <span className="bg-[#f2f2f2] text-[#222222] border border-[#ebebeb] px-3 py-1 rounded-[14px] text-[12px] font-bold">{genre.total_books} Buku</span>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2 transition-opacity">
-                        <Link to={`/admin/genres/edit/${genre.id}`} className="p-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors" title="Edit">
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                        <Link to={`/admin/genres/edit/${genre.id}`} className="flex h-10 items-center justify-center px-4 bg-[#ffffff] border border-[#222222] text-[#222222] hover:bg-[#f7f7f7] rounded-[8px] transition-colors text-[14px] font-medium" title="Edit">
+                          Edit
                         </Link>
                         <button 
                           onClick={() => handleDeleteClick(genre)}
-                          className="p-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors" 
+                          className="flex h-10 items-center justify-center px-4 bg-[#ffffff] border border-[#dddddd] text-[#c13515] hover:bg-[#ffd1da] hover:border-[#ffd1da] hover:text-[#b32505] rounded-[8px] transition-colors text-[14px] font-medium" 
                           title="Hapus"
                         >
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                          Hapus
                         </button>
                       </div>
                     </td>
@@ -126,9 +126,9 @@ export default function AdminGenres() {
                 <tr>
                   <td colSpan="4" className="px-6 py-12 text-center text-gray-500">
                     <div className="flex flex-col items-center justify-center">
-                      <svg className="w-12 h-12 text-gray-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
-                      <p className="text-base font-medium text-gray-900">Genre tidak ditemukan</p>
-                      <p className="text-sm mt-1">Coba gunakan kata kunci pencarian yang lain.</p>
+                      <svg className="w-12 h-12 text-[#dddddd] mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
+                      <p className="text-[16px] font-medium text-[#222222]">Genre tidak ditemukan</p>
+                      <p className="text-[14px] mt-1 text-[#6a6a6a]">Coba gunakan kata kunci pencarian yang lain.</p>
                     </div>
                   </td>
                 </tr>
@@ -137,22 +137,22 @@ export default function AdminGenres() {
           </table>
         </div>
 
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-gray-50/30">
-          <div className="hidden sm:block text-sm text-gray-500">
-            Menampilkan <span className="font-semibold text-gray-900">{filteredGenres.length === 0 ? 0 : startIndex + 1}</span> ke <span className="font-semibold text-gray-900">{Math.min(startIndex + itemsPerPage, filteredGenres.length)}</span> dari <span className="font-semibold text-gray-900">{filteredGenres.length}</span> hasil
+        <div className="flex items-center justify-between px-6 py-4 border-t border-[#ebebeb] bg-[#ffffff]">
+          <div className="hidden sm:block text-[14px] text-[#6a6a6a]">
+            Menampilkan <span className="font-semibold text-[#222222]">{filteredGenres.length === 0 ? 0 : startIndex + 1}</span> ke <span className="font-semibold text-[#222222]">{Math.min(startIndex + itemsPerPage, filteredGenres.length)}</span> dari <span className="font-semibold text-[#222222]">{filteredGenres.length}</span> hasil
           </div>
           <div className="flex gap-2 w-full sm:w-auto justify-between">
             <button 
               onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="px-4 py-2 border border-gray-200 text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 hover:text-blue-600 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex h-10 items-center px-[23px] border border-[#222222] text-[16px] font-medium rounded-[8px] text-[#222222] bg-[#ffffff] hover:bg-[#f7f7f7] transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:border-[#dddddd]"
             >
               Sebelumnya
             </button>
             <button 
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               disabled={currentPage >= totalPages || totalPages === 0}
-              className="px-4 py-2 border border-gray-200 text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 hover:text-blue-600 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex h-10 items-center px-[23px] border border-[#222222] text-[16px] font-medium rounded-[8px] text-[#222222] bg-[#ffffff] hover:bg-[#f7f7f7] transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:border-[#dddddd]"
             >
               Selanjutnya
             </button>

@@ -1,18 +1,21 @@
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
-export default function ProtectedRoute({ allowedRoles }) {
-  const location = useLocation();
-  
+export default function ProtectedRoute({ children, allowedRoles }) {
   const token = localStorage.getItem('token');
-  const role = localStorage.getItem('user_role');
+  const userRole = localStorage.getItem('user_role');
+  const location = useLocation();
 
+  // 1. Periksa ketersediaan otentikasi login
   if (!token) {
+    // Melempar kembali ke login sambil membawa state referensi rute agar bisa kembali setelah sukses
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(role)) {
-    return <Navigate to="/" replace />; 
+  // 2. Evaluasi aturan tingkat akses / RBAC secara ketat
+  if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
+    // Mencegah user biasa masuk ke area Admin dan sebaliknya
+    return <Navigate to="/" replace />;
   }
 
-  return <Outlet />;
+  return children;
 }

@@ -78,80 +78,86 @@ export default function Register() {
     };
 
     return (
-        <div className="min-h-screen bg-white flex items-center justify-center p-4 font-sans text-gray-900">
-            <div className="max-w-md w-full py-8">
+        <div className="flex-1 bg-[#ffffff] flex items-center justify-center p-4 py-12 font-sans text-[#222222]">
+            <div className="max-w-md w-full">
                 <div className="flex justify-center mb-6">
-                    <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                    <div className="w-14 h-14 bg-[#ff385c] rounded-full flex items-center justify-center shadow-lg shadow-[#ff385c]/30">
                         <span className="text-white font-bold text-3xl">B</span>
                     </div>
                 </div>
                 
                 <div className="text-center mb-10">
-                    <h2 className="text-3xl font-bold mb-2 tracking-tight">Buat Akun Baru</h2>
-                    <p className="text-gray-500">Bergabunglah dan nikmati kemudahannya.</p>
+                    <h2 className="text-[28px] font-bold mb-2 tracking-tight text-[#222222]">Buat Akun Baru</h2>
+                    <p className="text-[16px] text-[#6a6a6a]">Bergabunglah dan nikmati kemudahannya.</p>
                 </div>
                 
-                <form className="space-y-5" onSubmit={handleSubmit}>
+                <form className="space-y-4" onSubmit={handleSubmit}>
                     {errors.submit && (
-                        <div className="p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-200">
+                        <div className="p-3 text-[14px] font-medium text-[#c13515] bg-[#ffd1da]/30 rounded-[8px] border border-[#ffd1da]">
                             {errors.submit}
                         </div>
                     )}
 
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1.5">Nama Lengkap</label>
-                        <input
-                            type="text"
-                            name="fullName"
-                            value={formData.fullName}
-                            onChange={handleChange}
-                            className={`block w-full px-4 py-3 bg-gray-50 border rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 focus:bg-white transition-all duration-200 ${errors.fullName ? 'border-red-300 bg-red-50' : 'border-gray-200'}`}
-                            placeholder="Joko Widodo"
-                        />
-                        {errors.fullName && <p className="mt-1 text-xs text-red-500">{errors.fullName}</p>}
+                        <div className={`relative h-[56px] rounded-[8px] border bg-[#ffffff] transition-colors focus-within:border-2 focus-within:border-[#222222] ${errors.fullName ? 'border-[#c13515]' : 'border-[#dddddd]'}`}>
+                            <label className="absolute left-3 top-2 text-[12px] font-medium text-[#6a6a6a]">Nama Lengkap</label>
+                            <input
+                                type="text"
+                                name="fullName"
+                                value={formData.fullName}
+                                onChange={handleChange}
+                                className="absolute bottom-0 left-0 w-full bg-transparent px-3 pb-2 pt-6 text-[16px] text-[#222222] outline-none"
+                                placeholder="Joko Widodo"
+                            />
+                        </div>
+                        {errors.fullName && <p className="mt-1 pl-1 text-[12px] font-medium text-[#c13515]">{errors.fullName}</p>}
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1.5">Email</label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            className={`block w-full px-4 py-3 bg-gray-50 border rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 focus:bg-white transition-all duration-200 ${errors.email ? 'border-red-300 bg-red-50' : 'border-gray-200'}`}
-                            placeholder="contoh@email.com"
-                        />
-                        {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
+                        <div className={`relative h-[56px] rounded-[8px] border bg-[#ffffff] transition-colors focus-within:border-2 focus-within:border-[#222222] ${errors.email ? 'border-[#c13515]' : 'border-[#dddddd]'}`}>
+                            <label className="absolute left-3 top-2 text-[12px] font-medium text-[#6a6a6a]">Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                className="absolute bottom-0 left-0 w-full bg-transparent px-3 pb-2 pt-6 text-[16px] text-[#222222] outline-none"
+                                placeholder="contoh@email.com"
+                            />
+                        </div>
+                        {errors.email && <p className="mt-1 pl-1 text-[12px] font-medium text-[#c13515]">{errors.email}</p>}
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1.5">Username</label>
-                        <input
-                            type="text"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleChange}
-                            className={`block w-full px-4 py-3 bg-gray-50 border rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 focus:bg-white transition-all duration-200 ${errors.username ? 'border-red-300 bg-red-50' : 'border-gray-200'}`}
-                            placeholder="jokowi_123"
-                        />
-                        {errors.username && <p className="mt-1 text-xs text-red-500">{errors.username}</p>}
+                        <div className={`relative h-[56px] rounded-[8px] border bg-[#ffffff] transition-colors focus-within:border-2 focus-within:border-[#222222] ${errors.username ? 'border-[#c13515]' : 'border-[#dddddd]'}`}>
+                            <label className="absolute left-3 top-2 text-[12px] font-medium text-[#6a6a6a]">Username</label>
+                            <input
+                                type="text"
+                                name="username"
+                                value={formData.username}
+                                onChange={handleChange}
+                                className="absolute bottom-0 left-0 w-full bg-transparent px-3 pb-2 pt-6 text-[16px] text-[#222222] outline-none"
+                                placeholder="jokowi_123"
+                            />
+                        </div>
+                        {errors.username && <p className="mt-1 pl-1 text-[12px] font-medium text-[#c13515]">{errors.username}</p>}
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1.5">Password</label>
-                        <div className="relative">
+                        <div className={`relative h-[56px] rounded-[8px] border bg-[#ffffff] transition-colors focus-within:border-2 focus-within:border-[#222222] ${errors.password ? 'border-[#c13515]' : 'border-[#dddddd]'}`}>
+                            <label className="absolute left-3 top-2 text-[12px] font-medium text-[#6a6a6a]">Password</label>
                             <input
                                 type={showPassword ? "text" : "password"}
                                 name="password"
                                 value={formData.password}
                                 onChange={handleChange}
-                                className={`block w-full pl-4 pr-10 py-3 bg-gray-50 border rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 focus:bg-white transition-all duration-200 ${errors.password ? 'border-red-300 bg-red-50' : 'border-gray-200'}`}
+                                className="absolute bottom-0 left-0 w-full bg-transparent pl-3 pr-10 pb-2 pt-6 text-[16px] text-[#222222] outline-none"
                                 placeholder="••••••••"
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
+                                className="absolute inset-y-0 right-0 flex items-center pr-3 text-[#6a6a6a] hover:text-[#222222] focus:outline-none"
                             >
                                 {showPassword ? (
                                     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
@@ -160,14 +166,14 @@ export default function Register() {
                                 )}
                             </button>
                         </div>
-                        {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
+                        {errors.password && <p className="mt-1 pl-1 text-[12px] font-medium text-[#c13515]">{errors.password}</p>}
                     </div>
 
-                    <div className="pt-2">
+                    <div className="pt-4">
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-md shadow-blue-500/30 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                            className="flex h-[48px] w-full items-center justify-center rounded-[8px] bg-[#ff385c] px-4 text-[16px] font-medium text-white transition-colors duration-200 hover:bg-[#e00b41] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             {isLoading ? 'Memproses...' : 'Daftar Sekarang'}
                         </button>
@@ -175,9 +181,9 @@ export default function Register() {
                 </form>
 
                 <div className="text-center mt-6">
-                    <p className="text-sm text-gray-500">
+                    <p className="text-[14px] text-[#6a6a6a]">
                         Sudah punya akun?{' '}
-                        <Link to="/login" className="font-semibold text-blue-600 hover:text-blue-500 transition-colors">
+                        <Link to="/login" className="font-medium text-[#222222] underline transition-colors hover:text-[#ff385c]">
                             Masuk di sini
                         </Link>
                     </p>

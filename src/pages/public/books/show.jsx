@@ -1,148 +1,184 @@
 export default function ShowBook() {
   return (
-    <>
-      <section className="py-8 bg-white md:py-16 dark:bg-gray-900 antialiased">
-        <div className="max-w-screen-xl px-4 mx-auto 2xl:px-0">
-          <div className="lg:grid lg:grid-cols-2 lg:gap-8 xl:gap-16">
-            <div className="shrink-0 max-w-md lg:max-w-lg mx-auto">
-              <img
-                class="w-full dark:hidden"
-                src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg"
-                alt=""
-              />
-              <img
-                class="w-full hidden dark:block"
-                src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-dark.svg"
-                alt=""
-              />
+    <div className="min-h-screen bg-[#ffffff] pb-24 font-sans text-[#222222]">
+      <main className="mx-auto max-w-[1080px] px-6 py-8">
+        {/* Title & Metadata Section */}
+        <div className="mb-6">
+          <h1 className="text-[28px] font-semibold leading-[1.18] tracking-[-0.44px] text-[#222222] md:text-[32px]">
+            Atomic Habits: Perubahan Kecil yang Memberikan Hasil Luar Biasa
+          </h1>
+          <div className="mt-2 flex items-center gap-2 text-[14px] font-medium text-[#222222]">
+            <span>★ 4.81</span>
+            <span>·</span>
+            <span className="underline">345 ulasan</span>
+            <span>·</span>
+            <span className="text-[#6a6a6a]">James Clear</span>
+          </div>
+        </div>
+
+        {/* Photo Section */}
+        <div className="relative mb-10 flex aspect-[2/1] w-full items-center justify-center overflow-hidden rounded-[14px] bg-[#f7f7f7] md:aspect-[2.5/1]">
+          <img
+            src="https://placehold.co/640x800/f7f7f7/222222?text=Atomic+Habits"
+            alt="Atomic Habits Cover"
+            className="h-full mix-blend-multiply object-contain py-8"
+          />
+          <div className="absolute left-4 top-4 rounded-full bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-[0.32px] text-[#222222] shadow-[0_2px_6px_rgba(0,0,0,0.08)]">
+            Pilihan Editor
+          </div>
+        </div>
+
+        {/* 2-Column Layout */}
+        <div className="relative flex flex-col items-start gap-12 lg:flex-row lg:gap-[8%]">
+          
+          {/* Kolom Kiri: Detail, Deskripsi, Ulasan (64%) */}
+          <div className="w-full lg:w-[64%]">
+            {/* Intro Detail */}
+            <div className="mb-8">
+              <h2 className="text-[22px] font-medium leading-[1.25] text-[#222222]">
+                Buku Self-Improvement oleh James Clear
+              </h2>
+              <p className="mt-1 text-[16px] text-[#6a6a6a]">
+                320 halaman · Diterbitkan Tahun 2018
+              </p>
             </div>
 
-            <div className="mt-6 sm:mt-8 lg:mt-0">
-              <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">
-                Apple iMac 24" All-In-One Computer, Apple M1, 8GB RAM, 256GB
-                SSD, Mac OS, Pink
-              </h1>
-              <div className="mt-4 sm:items-center sm:gap-4 sm:flex">
-                <p className="text-2xl font-extrabold text-gray-900 sm:text-3xl dark:text-white">
-                  $1,249.99
-                </p>
+            {/* Hairline Separator */}
+            <hr className="my-8 border-t border-[#dddddd]" />
 
-                <div className="flex items-center gap-2 mt-2 sm:mt-0">
-                  <div className="flex items-center gap-1">
-                    <svg
-                      className="w-4 h-4 text-yellow-300"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
-                    </svg>
-                    <svg
-                      className="w-4 h-4 text-yellow-300"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
-                    </svg>
-                    <svg
-                      className="w-4 h-4 text-yellow-300"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
-                    </svg>
-                    <svg
-                      className="w-4 h-4 text-yellow-300"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
-                    </svg>
-                    <svg
-                      className="w-4 h-4 text-yellow-300"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
-                    </svg>
-                  </div>
-                  <p className="text-sm font-medium leading-none text-gray-500 dark:text-gray-400">
-                    (5.0)
-                  </p>
-                  <a
-                    href="#"
-                    className="text-sm font-medium leading-none text-gray-900 underline hover:no-underline dark:text-white"
-                  >
-                    345 Reviews
-                  </a>
+            {/* Description */}
+            <div className="py-2">
+              <p className="text-[16px] font-normal leading-[1.5] text-[#222222]">
+                Orang mengira saat Anda ingin mengubah hidup, Anda perlu memikirkan hal-hal besar. 
+                Namun, pakar kebiasaan terkenal kelas dunia James Clear telah menemukan cara lain. 
+                Ia tahu bahwa perubahan nyata berasal dari efek gabungan ratusan keputusan kecil: 
+                mulai dari mengerjakan dua *push-up* sehari, bangun lima menit lebih awal, hingga menahan hasrat untuk menelepon.
+              </p>
+              <p className="mt-4 text-[16px] font-normal leading-[1.5] text-[#222222]">
+                Dalam buku yang inovatif ini, Clear mengungkapkan dengan tepat bagaimana perubahan-perubahan 
+                sangat remeh ini dapat tumbuh menjadi hasil-hasil yang sangat mengubah hidup.
+              </p>
+            </div>
+
+            <hr className="my-8 border-t border-[#dddddd]" />
+
+            {/* Ulasan & Rating (Besar untuk Trust Signal) */}
+            <div className="py-2">
+              <div className="mb-6 flex items-center gap-4 text-[#222222]">
+                {/* Tampilan Rating 64px */}
+                <h2 className="text-[64px] font-bold leading-[1.1] tracking-[-1px]">
+                  4.81
+                </h2>
+                <div>
+                  <div className="text-[20px] font-semibold">Pilihan Pembaca</div>
+                  <p className="text-[14px] text-[#6a6a6a]">Dari 345 ulasan di marketplace</p>
                 </div>
               </div>
 
-              <div className="mt-6 sm:gap-4 sm:items-center sm:flex sm:mt-8">
-                <a
-                  href="#"
-                  title=""
-                  class="text-white mt-4 sm:mt-0 bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 flex items-center justify-center"
-                  role="button"
-                >
-                  <svg
-                    class="w-5 h-5 -ms-2 me-2"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M4 4h1.5L8 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm.75-3H7.5M11 7H6.312M17 4v6m-3-3h6"
-                    />
-                  </svg>
-                  Add to cart
-                </a>
+              {/* Daftar Ulasan Minimalis */}
+              <div className="mt-8 grid gap-6 sm:grid-cols-2">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ebebeb] font-bold text-[#222222]">A</div>
+                    <div>
+                      <div className="text-[16px] font-medium text-[#222222]">Andi</div>
+                      <div className="text-[14px] text-[#6a6a6a]">2 minggu lalu</div>
+                    </div>
+                  </div>
+                  <p className="text-[16px] font-normal leading-[1.5] text-[#222222]">"Sangat praktis dan mudah diaplikasikan. Konsep 1% lebih baik setiap hari benar-benar mengubah cara pandang saya."</p>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ebebeb] font-bold text-[#222222]">B</div>
+                    <div>
+                      <div className="text-[16px] font-medium text-[#222222]">Budi</div>
+                      <div className="text-[14px] text-[#6a6a6a]">1 bulan lalu</div>
+                    </div>
+                  </div>
+                  <p className="text-[16px] font-normal leading-[1.5] text-[#222222]">"Buku wajib untuk siapa saja yang merasa stuck dengan rutinitas. Penjelasannya runut dan berbasis sains."</p>
+                </div>
               </div>
+            </div>
 
-              <hr className="my-6 md:my-8 border-gray-200 dark:border-gray-800" />
+            <hr className="my-8 border-t border-[#dddddd]" />
 
-              <p class="mb-6 text-gray-500 dark:text-gray-400">
-                Studio quality three mic array for crystal clear calls and voice
-                recordings. Six-speaker sound system for a remarkably robust and
-                high-quality audio experience. Up to 256GB of ultrafast SSD
-                storage.
+            {/* Informasi Penulis */}
+            <div className="py-2">
+              <div className="mb-4 flex items-center gap-4">
+                <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-[#ebebeb]">
+                  <img src="https://placehold.co/100x100/f7f7f7/222222?text=JC" alt="James Clear" className="h-full w-full object-cover" />
+                </div>
+                <div>
+                  <h3 className="text-[22px] font-medium text-[#222222]">Ditulis oleh James Clear</h3>
+                  <p className="text-[14px] text-[#6a6a6a]">Penulis & Pembicara</p>
+                </div>
+              </div>
+              <p className="mb-6 text-[16px] font-normal leading-[1.5] text-[#222222]">
+                James Clear adalah penulis dan pembicara yang fokus pada kebiasaan, pengambilan keputusan, 
+                dan peningkatan berkelanjutan. Karyanya telah muncul di New York Times, Time, dan Entrepreneur.
               </p>
-
-              <p class="text-gray-500 dark:text-gray-400">
-                Two Thunderbolt USB 4 ports and up to two USB 3 ports. Ultrafast
-                Wi-Fi 6 and Bluetooth 5.0 wireless. Color matched Magic Mouse
-                with Magic Keyboard or Magic Keyboard with Touch ID.
-              </p>
+              <button className="rounded-[8px] border border-[#222222] bg-white px-6 py-3 text-[16px] font-medium text-[#222222] transition-colors hover:bg-[#f7f7f7]">
+                Ikuti Penulis
+              </button>
             </div>
           </div>
+
+          {/* Kolom Kanan: Reservation Card Sticky (32%) */}
+          <div className="sticky top-28 mb-12 w-full lg:w-[32%]">
+            <div className="rounded-[14px] border border-[#dddddd] bg-[#ffffff] p-6 shadow-[rgba(0,0,0,0.02)_0_0_0_1px,rgba(0,0,0,0.04)_0_2px_6px_0,rgba(0,0,0,0.1)_0_4px_8px_0]">
+              <div className="mb-6 flex items-baseline gap-1">
+                <span className="text-[22px] font-bold text-[#222222]">Rp 120.000</span>
+              </div>
+
+              <div className="mb-4 overflow-hidden rounded-[8px] border border-[#b0b0b0]">
+                <div className="flex border-b border-[#b0b0b0]">
+                  <div className="w-1/2 border-r border-[#b0b0b0] p-3">
+                    <div className="text-[10px] font-bold uppercase tracking-[0.32px] text-[#222222]">Format</div>
+                    <div className="mt-1 text-[14px] text-[#222222]">Buku Fisik</div>
+                  </div>
+                  <div className="w-1/2 p-3">
+                    <div className="text-[10px] font-bold uppercase tracking-[0.32px] text-[#222222]">Kondisi</div>
+                    <div className="mt-1 text-[14px] text-[#222222]">Baru</div>
+                  </div>
+                </div>
+                <div className="p-3">
+                  <div className="text-[10px] font-bold uppercase tracking-[0.32px] text-[#222222]">Jumlah</div>
+                  <select className="mt-1 w-full bg-transparent text-[14px] outline-none">
+                    <option>1 Buku</option>
+                    <option>2 Buku</option>
+                    <option>3 Buku</option>
+                  </select>
+                </div>
+              </div>
+
+              <button className="flex h-[48px] w-full items-center justify-center rounded-[8px] bg-[#ff385c] text-[16px] font-medium text-[#ffffff] transition-colors hover:bg-[#e00b41]">
+                Beli Sekarang
+              </button>
+              
+              <div className="mt-4 text-center text-[14px] text-[#6a6a6a]">
+                Pembayaran dilakukan di langkah berikutnya.
+              </div>
+
+              <div className="mt-6 space-y-3 border-b border-[#dddddd] pb-4">
+                <div className="flex justify-between text-[16px] text-[#222222]">
+                  <span className="underline">Buku (1x)</span>
+                  <span>Rp 120.000</span>
+                </div>
+                <div className="flex justify-between text-[16px] text-[#222222]">
+                  <span className="underline">Ongkos Kirim</span>
+                  <span>Rp 15.000</span>
+                </div>
+              </div>
+              <div className="pt-4 flex justify-between text-[16px] font-bold text-[#222222]">
+                <span>Total</span>
+                <span>Rp 135.000</span>
+              </div>
+            </div>
+          </div>
+
         </div>
-      </section>
-    </>
+      </main>
+    </div>
   );
 }

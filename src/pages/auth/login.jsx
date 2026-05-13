@@ -82,55 +82,52 @@ export default function Login() {
   };
 
   return (
-    <div className="flex-1 bg-white flex items-center justify-center p-4 py-12 font-sans text-gray-900">
+    <div className="flex-1 bg-[#ffffff] flex items-center justify-center p-4 py-12 font-sans text-[#222222]">
         <div className="max-w-md w-full">
             <div className="flex justify-center mb-6">
-                <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                <div className="w-14 h-14 bg-[#ff385c] rounded-full flex items-center justify-center shadow-lg shadow-[#ff385c]/30">
                     <span className="text-white font-bold text-3xl">B</span>
                 </div>
             </div>
             
             <div className="text-center mb-10">
-                <h2 className="text-3xl font-bold mb-2 tracking-tight">Selamat Datang</h2>
-                <p className="text-gray-500">Silakan masukkan detail akun Anda untuk masuk.</p>
+                <h2 className="text-[28px] font-bold mb-2 tracking-tight text-[#222222]">Selamat Datang</h2>
+                <p className="text-[16px] text-[#6a6a6a]">Silakan masukkan detail akun Anda untuk masuk.</p>
             </div>
             
             <form className="space-y-6" onSubmit={handleLogin}>
                 {errors.submit && (
-                    <div className="p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-200">
+                    <div className="p-3 text-[14px] font-medium text-[#c13515] bg-[#ffd1da]/30 rounded-[8px] border border-[#ffd1da]">
                         {errors.submit}
                     </div>
                 )}
 
-                <div className="space-y-5">
-                    <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1.5">Email</label>
+                <div className="space-y-4">
+                    <div className="relative h-[56px] rounded-[8px] border border-[#dddddd] bg-[#ffffff] transition-colors focus-within:border-2 focus-within:border-[#222222]">
+                        <label className="absolute left-3 top-2 text-[12px] font-medium text-[#6a6a6a]">Email</label>
                         <input
                             type="email"
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
-                            className="block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 focus:bg-white transition-all duration-200"
+                            className="absolute bottom-0 left-0 w-full bg-transparent px-3 pb-2 pt-6 text-[16px] text-[#222222] outline-none"
                             placeholder="contoh@email.com"
                         />
                     </div>
-                    <div>
-                        <div className="flex items-center justify-between mb-1.5">
-                            <label className="block text-sm font-semibold text-gray-700">Password</label>
-                        </div>
-                        <div className="relative">
+                    <div className="relative h-[56px] rounded-[8px] border border-[#dddddd] bg-[#ffffff] transition-colors focus-within:border-2 focus-within:border-[#222222]">
+                        <label className="absolute left-3 top-2 text-[12px] font-medium text-[#6a6a6a]">Password</label>
                             <input
                                 type={showPassword ? "text" : "password"}
                                 name="password"
                                 value={formData.password}
                                 onChange={handleChange}
-                                className="block w-full pl-4 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 focus:bg-white transition-all duration-200"
+                            className="absolute bottom-0 left-0 w-full bg-transparent pl-3 pr-10 pb-2 pt-6 text-[16px] text-[#222222] outline-none"
                                 placeholder="••••••••"
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
+                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-[#6a6a6a] hover:text-[#222222] focus:outline-none"
                             >
                                 {showPassword ? (
                                     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
@@ -138,23 +135,22 @@ export default function Login() {
                                     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
                                 )}
                             </button>
-                        </div>
                     </div>
                 </div>
 
                 <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-md shadow-blue-500/30 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                    className="flex h-[48px] w-full items-center justify-center rounded-[8px] bg-[#ff385c] px-4 text-[16px] font-medium text-white transition-colors duration-200 hover:bg-[#e00b41] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     {isLoading ? 'Memproses...' : 'Sign in'}
                 </button>
                 
-                <p className="text-sm text-center text-gray-500 pt-4">
+                <p className="pt-4 text-center text-[14px] text-[#6a6a6a]">
                     Belum punya akun?{" "}
                     <Link
                         to="/register"
-                        className="font-semibold text-blue-600 hover:text-blue-500 transition-colors"
+                        className="font-medium text-[#222222] underline transition-colors hover:text-[#ff385c]"
                     >
                         Daftar di sini
                     </Link>

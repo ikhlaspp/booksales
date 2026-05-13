@@ -50,45 +50,45 @@ export default function AdminGenreForm() {
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
+          <h2 className="text-[22px] font-bold text-[#222222] tracking-[-0.44px]">
             {isEditMode ? 'Edit Genre' : 'Tambah Genre Baru'}
           </h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-[14px] text-[#6a6a6a] mt-1">
             {isEditMode ? 'Perbarui informasi detail genre.' : 'Masukkan informasi detail untuk genre baru.'}
           </p>
         </div>
         <Link
           to="/admin/genres"
-          className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors shadow-sm"
+          className="inline-flex h-[48px] items-center px-[23px] text-[16px] font-medium text-[#222222] bg-[#ffffff] border border-[#222222] rounded-[8px] hover:bg-[#f7f7f7] transition-colors"
         >
           Kembali
         </Link>
       </div>
 
-      <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 md:p-8">
+      <div className="bg-[#ffffff] border border-[#ebebeb] rounded-[14px] shadow-[0_2px_6px_rgba(0,0,0,0.04)] p-6 md:p-8">
         <form onSubmit={handleSubmitClick} className="space-y-6">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Nama Genre</label>
+            <label className="block text-[12px] font-bold text-[#222222] mb-1.5 uppercase tracking-[0.32px]">Nama Genre</label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
               required
-              className="block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 focus:bg-white transition-all duration-200"
+              className="block w-full h-[56px] px-[12px] bg-[#ffffff] border border-[#dddddd] rounded-[8px] text-[#222222] text-[16px] focus:outline-none focus:border-2 focus:border-[#222222] transition-colors"
               placeholder="Masukkan nama genre"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Deskripsi Singkat</label>
+            <label className="block text-[12px] font-bold text-[#222222] mb-1.5 uppercase tracking-[0.32px]">Deskripsi Singkat</label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
               required
               rows="4"
-              className="block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 focus:bg-white transition-all duration-200 resize-none"
+              className="block w-full p-[12px] bg-[#ffffff] border border-[#dddddd] rounded-[8px] text-[#222222] text-[16px] focus:outline-none focus:border-2 focus:border-[#222222] transition-colors resize-none"
               placeholder="Masukkan deskripsi genre..."
             ></textarea>
           </div>
@@ -97,7 +97,7 @@ export default function AdminGenreForm() {
             <button
               type="submit"
               disabled={isLoading}
-              className="inline-flex justify-center items-center px-6 py-3 border border-transparent rounded-xl shadow-md shadow-blue-500/30 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-all duration-200"
+              className="inline-flex h-[48px] justify-center items-center px-[24px] rounded-[8px] text-[16px] font-medium text-[#ffffff] bg-[#ff385c] hover:bg-[#e00b41] focus:outline-none disabled:opacity-50 transition-colors"
             >
               {isLoading ? 'Menyimpan...' : 'Simpan Genre'}
             </button>

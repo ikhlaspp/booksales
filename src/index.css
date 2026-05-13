@@ -1,1 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
+
+@theme {
+	--color-rausch: #ff385c;
+	--color-rausch-active: #e00b41;
+	--color-rausch-disabled: #ffd1da;
+	--color-ink: #222222;
+	--color-body: #3f3f3f;
+	--color-muted: #6a6a6a;
+	--color-muted-soft: #929292;
+	--color-hairline: #dddddd;
+	--color-hairline-soft: #ebebeb;
+	--color-canvas: #ffffff;
+	--color-surface-soft: #f7f7f7;
+	--color-surface-strong: #f2f2f2;
+
+	--radius-sm: 8px;
+	--radius-md: 14px;
+	--radius-lg: 20px;
+	--radius-xl: 32px;
+
+	--font-sans: 'Inter', -apple-system, system-ui, sans-serif;
+
+	--shadow-card: rgba(0, 0, 0, 0.02) 0 0 0 1px, rgba(0, 0, 0, 0.04) 0 2px 6px, rgba(0, 0, 0, 0.1) 0 4px 8px;
+}

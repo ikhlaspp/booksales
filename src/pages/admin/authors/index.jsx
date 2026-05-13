@@ -53,12 +53,12 @@ export default function AdminAuthors() {
       {/* Header & Add Button */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Kelola Authors</h2>
-          <p className="text-sm text-gray-500 mt-1">Daftar penulis buku yang terdaftar di sistem.</p>
+          <h2 className="text-[22px] font-bold text-[#222222] tracking-[-0.44px]">Kelola Authors</h2>
+          <p className="text-[14px] text-[#6a6a6a] mt-1">Daftar penulis buku yang terdaftar di sistem.</p>
         </div>
         <Link 
           to="/admin/authors/create" 
-          className="inline-flex items-center px-4 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 shadow-md shadow-blue-500/30 transition-all duration-200"
+          className="inline-flex items-center px-[24px] py-[14px] bg-[#ff385c] text-[#ffffff] text-[16px] font-medium rounded-[8px] hover:bg-[#e00b41] transition-colors h-[48px]"
         >
           <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -125,15 +125,15 @@ export default function AdminAuthors() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2 transition-opacity">
-                        <Link to={`/admin/authors/edit/${author.id}`} className="p-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors" title="Edit">
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                        <Link to={`/admin/authors/edit/${author.id}`} className="flex h-10 items-center justify-center px-4 bg-[#ffffff] border border-[#222222] text-[#222222] hover:bg-[#f7f7f7] rounded-[8px] transition-colors text-[14px] font-medium" title="Edit">
+                          Edit
                         </Link>
                         <button 
                           onClick={() => handleDeleteClick(author)}
-                          className="p-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors" 
+                          className="flex h-10 items-center justify-center px-4 bg-[#ffffff] border border-[#dddddd] text-[#c13515] hover:bg-[#ffd1da] hover:border-[#ffd1da] hover:text-[#b32505] rounded-[8px] transition-colors text-[14px] font-medium" 
                           title="Hapus"
                         >
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                          Hapus
                         </button>
                       </div>
                     </td>
