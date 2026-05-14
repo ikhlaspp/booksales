@@ -1,26 +1,186 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+/* 1. Impor eksternal (Google Fonts) harus berada di baris paling atas */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+/* 2. Baru kemudian impor Tailwind CSS */
 @import "tailwindcss";
 
+/* 3. Definisi tema kustom */
 @theme {
-	--color-rausch: #ff385c;
-	--color-rausch-active: #e00b41;
-	--color-rausch-disabled: #ffd1da;
-	--color-ink: #222222;
-	--color-body: #3f3f3f;
-	--color-muted: #6a6a6a;
-	--color-muted-soft: #929292;
-	--color-hairline: #dddddd;
-	--color-hairline-soft: #ebebeb;
-	--color-canvas: #ffffff;
-	--color-surface-soft: #f7f7f7;
-	--color-surface-strong: #f2f2f2;
+  --color-rausch: #ff385c;
+  --color-rausch-active: #e00b41;
+  --color-rausch-disabled: #ffd1da;
+  --color-ink: #222222;
+  --color-body: #3f3f3f;
+  --color-muted: #6a6a6a;
+  --color-muted-soft: #929292;
+  --color-hairline: #dddddd;
+  --color-hairline-soft: #ebebeb;
+  --color-canvas: #ffffff;
+  --color-surface-soft: #f7f7f7;
+  --color-surface-strong: #f2f2f2;
 
-	--radius-sm: 8px;
-	--radius-md: 14px;
-	--radius-lg: 20px;
-	--radius-xl: 32px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 32px;
 
-	--font-sans: 'Inter', -apple-system, system-ui, sans-serif;
+  --font-sans: "Inter", -apple-system, system-ui, sans-serif;
 
-	--shadow-card: rgba(0, 0, 0, 0.02) 0 0 0 1px, rgba(0, 0, 0, 0.04) 0 2px 6px, rgba(0, 0, 0, 0.1) 0 4px 8px;
+  --shadow-card: rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px, rgba(0,0,0,0.1) 0 4px 8px;
+
+  /* Typography scale */
+  --font-size-display-xl: 28px;
+  --line-height-display-xl: 1.43;
+  --font-size-display-lg: 22px;
+  --line-height-display-lg: 1.18;
+  --font-size-display-md: 21px;
+  --line-height-display-md: 1.43;
+  --font-size-display-sm: 20px;
+  --line-height-display-sm: 1.20;
+  --font-size-title-md: 16px;
+  --line-height-title-md: 1.25;
+  --font-size-title-sm: 16px;
+  --line-height-title-sm: 1.25;
+  --font-size-body-md: 16px;
+  --line-height-body-md: 1.5;
+  --font-size-body-sm: 14px;
+  --line-height-body-sm: 1.43;
+  --font-size-caption: 14px;
+  --line-height-caption: 1.29;
+  --font-size-caption-sm: 13px;
+  --line-height-caption-sm: 1.23;
+  --font-size-badge: 11px;
+  --line-height-badge: 1.18;
+  --font-size-micro-label: 12px;
+  --line-height-micro-label: 1.33;
+  --font-size-button-md: 16px;
+  --line-height-button-md: 1.25;
+  --font-size-button-sm: 14px;
+  --line-height-button-sm: 1.29;
+}
+
+/* =============================================
+   Base styles
+   ============================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background-color: var(--color-canvas);
+}
+
+/* =============================================
+   Typography scale utility classes
+   ============================================= */
+.text-display-xl {
+  font-size: var(--font-size-display-xl);
+  line-height: var(--line-height-display-xl);
+}
+.text-display-lg {
+  font-size: var(--font-size-display-lg);
+  line-height: var(--line-height-display-lg);
+  letter-spacing: -0.44px;
+}
+.text-display-md {
+  font-size: var(--font-size-display-md);
+  line-height: var(--line-height-display-md);
+}
+.text-display-sm {
+  font-size: var(--font-size-display-sm);
+  line-height: var(--line-height-display-sm);
+  letter-spacing: -0.18px;
+}
+.text-title-md {
+  font-size: var(--font-size-title-md);
+  line-height: var(--line-height-title-md);
+}
+.text-title-sm {
+  font-size: var(--font-size-title-sm);
+  line-height: var(--line-height-title-sm);
+}
+.text-body-md {
+  font-size: var(--font-size-body-md);
+  line-height: var(--line-height-body-md);
+}
+.text-body-sm {
+  font-size: var(--font-size-body-sm);
+  line-height: var(--line-height-body-sm);
+}
+.text-caption {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+.text-caption-sm {
+  font-size: var(--font-size-caption-sm);
+  line-height: var(--line-height-caption-sm);
+}
+.text-badge {
+  font-size: var(--font-size-badge);
+  line-height: var(--line-height-badge);
+}
+.text-micro-label {
+  font-size: var(--font-size-micro-label);
+  line-height: var(--line-height-micro-label);
+}
+.text-button-md {
+  font-size: var(--font-size-button-md);
+  line-height: var(--line-height-button-md);
+}
+.text-button-sm {
+  font-size: var(--font-size-button-sm);
+  line-height: var(--line-height-button-sm);
+}
+
+/* =============================================
+   Scrollbar utilities
+   ============================================= */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* =============================================
+   Animation keyframes
+   ============================================= */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-soft) 25%,
+    var(--color-surface-strong) 50%,
+    var(--color-surface-soft) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out forwards;
 }

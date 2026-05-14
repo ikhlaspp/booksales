@@ -1,4 +1,4 @@
-export default function DeleteModal({ isOpen, onClose, onConfirm, isLoading, message }) {
+export default function DeleteModal({ isOpen, onClose, onConfirm, isLoading, message, confirmButtonClass = "bg-[#ff385c] hover:bg-[#e00b41]" }) {
   if (!isOpen) return null;
 
   return (
@@ -26,7 +26,7 @@ export default function DeleteModal({ isOpen, onClose, onConfirm, isLoading, mes
             type="button"
             onClick={onConfirm}
             disabled={isLoading}
-            className="h-[48px] px-[24px] text-[16px] font-medium text-[#ffffff] bg-[#ff385c] rounded-[8px] hover:bg-[#e00b41] transition-colors disabled:opacity-50 flex items-center justify-center"
+            className={`h-[48px] px-[24px] text-[16px] font-medium text-[#ffffff] ${confirmButtonClass} rounded-[8px] transition-colors disabled:opacity-50 flex items-center justify-center`}
           >
             {isLoading ? 'Menghapus...' : 'Hapus'}
           </button>

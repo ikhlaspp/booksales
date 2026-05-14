@@ -1,155 +1,164 @@
-﻿﻿import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+﻿import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
   const token = localStorage.getItem('token');
-  const userRole = localStorage.getItem('user_role') || 'User';
-  const isLoggedIn = Boolean(token);
+  const role = localStorage.getItem('user_role');
+
+  const navLinks = [
+    { name: 'Beranda', href: '/' },
+    { name: 'Tentang Kami', href: '/about' },
+    { name: 'Hubungi Kami', href: '/contact' },
+  ];
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user_role');
     localStorage.removeItem('user_id');
-    window.location.href = '/login';
+    setIsMobileOpen(false);
+    navigate('/login');
   };
 
-  const navLinks = [
-    { name: 'Beranda', path: '/' },
-    { name: 'Katalog', path: '/books' },
-    { name: 'Tentang', path: '/about' },
-  ];
+  const isActive = (href) => {
+    return location.pathname === href || (href !== '/' && location.pathname.startsWith(href));
+  };
+
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [location.pathname]);
+
+  const currentRole = role || 'Customer';
 
   return (
-    <nav className="sticky top-0 z-50 h-20 border-b border-hairline bg-canvas">
-      <div className="max-w-[1280px] mx-auto px-6 h-full flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2.5">
-          <svg className="h-8 w-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M5 6.5C5 5.12 6.12 4 7.5 4H18V17H7.5C6.12 17 5 18.12 5 19.5V6.5Z" stroke="#ff385c" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M7 8H16" stroke="#ff385c" strokeWidth="1.8" strokeLinecap="round"/>
-            <path d="M7 11H16" stroke="#ff385c" strokeWidth="1.8" strokeLinecap="round"/>
-            <path d="M5 19.5H18" stroke="#ff385c" strokeWidth="1.8" strokeLinecap="round"/>
-          </svg>
-          <span className="text-[22px] font-semibold tracking-[-0.44px] text-ink">BookSales</span>
-        </Link>
+    <header className="sticky top-0 z-50 bg-canvas/80 backdrop-blur-lg border-b border-hairline">
+      <nav className="mx-auto max-w-7xl px-6 md:px-12">
+        <div className="flex items-center justify-between h-20">
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => {
-            const isActive = location.pathname === link.path;
-            return (
-              <Link
-                key={link.name}
-                to={link.path}
-                className={`border-b-2 pb-1 text-[16px] transition-colors ${
-                  isActive 
-                    ? 'border-rausch text-ink font-semibold'
-                    : 'border-transparent text-muted hover:text-ink'
-                }`}
-              >
-                {link.name}
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* Desktop Auth */}
-        <div className="hidden md:flex items-center gap-4">
-          {isLoggedIn ? (
-            <div className="flex items-center gap-3 rounded-md bg-surface-soft px-4 py-2">
-              <Link to="/user/profile" className="text-sm font-medium text-ink capitalize">
-                {userRole}
-              </Link>
-              <button type="button" onClick={handleLogout} className="text-sm font-medium text-rausch">
-                Keluar
-              </button>
+          <Link to="/" className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-rausch rounded-sm flex items-center justify-center shadow-sm">
+              <span className="text-white font-bold text-xl">B</span>
             </div>
-          ) : (
-            <>
-              <Link
-                to="/login"
-                className="rounded-sm bg-rausch px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-rausch-active"
-              >
-                Masuk
-              </Link>
-              <Link
-                to="/register"
-                className="rounded-sm border border-hairline bg-canvas px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-surface-soft"
-              >
-                Daftar
-              </Link>
-            </>
-          )}
-        </div>
+            <span className="text-lg font-semibold tracking-tight text-ink">BookSales.</span>
+          </Link>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden flex items-center text-ink"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-          </svg>
-        </button>
-      </div>
-
-      {/* Mobile Menu Sheet */}
-      {isMenuOpen && (
-        <div className="absolute left-0 top-20 w-full border-b border-hairline bg-canvas shadow-card md:hidden">
-          <div className="flex flex-col gap-1 p-6">
+          <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => {
-              const isActive = location.pathname === link.path;
-
+              const active = isActive(link.href);
               return (
                 <Link
                   key={link.name}
-                  to={link.path}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`border-l-2 py-2 pl-3 text-[16px] ${
-                    isActive ? 'border-rausch text-ink font-semibold' : 'border-transparent text-muted hover:text-ink'
-                  }`}
+                  to={link.href}
+                  className={`text-sm transition-colors py-1 ${active
+                    ? 'text-ink font-semibold border-b-2 border-rausch'
+                    : 'text-muted hover:text-ink font-medium'
+                    }`}
                 >
                   {link.name}
                 </Link>
               );
             })}
+          </div>
 
-            {isLoggedIn ? (
-              <div className="mt-4 flex items-center justify-between rounded-md bg-surface-soft px-4 py-3">
-                <Link to="/user/profile" onClick={() => setIsMenuOpen(false)} className="text-sm font-medium text-ink capitalize">
-                  {userRole}
+          <div className="hidden md:flex items-center">
+            {token ? (
+              <div className="flex items-center bg-surface-soft p-1.5 pr-5 rounded-full border border-hairline">
+                <Link to={role === 'admin' ? '/admin' : '/user'} className="flex items-center gap-3 group">
+                  <div className="w-8 h-8 rounded-full bg-surface-strong flex items-center justify-center overflow-hidden">
+                    <img src={`https://ui-avatars.com/api/?name=${currentRole}&background=222222&color=ffffff`} alt="Profile" className="w-full h-full object-cover" />
+                  </div>
+                  <span className="text-sm font-medium text-ink capitalize group-hover:underline">
+                    {currentRole}
+                  </span>
                 </Link>
+                <div className="w-px h-4 bg-hairline mx-4"></div>
                 <button
-                  type="button"
                   onClick={handleLogout}
-                  className="text-sm font-medium text-rausch"
+                  className="text-sm font-medium text-rausch hover:text-rausch-active transition-colors"
                 >
                   Keluar
                 </button>
               </div>
             ) : (
-              <div className="mt-4 grid grid-cols-2 gap-3">
-                <Link
-                  to="/login"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="rounded-sm bg-rausch px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-rausch-active"
-                >
-                  Masuk
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="rounded-sm border border-hairline bg-canvas px-4 py-2.5 text-center text-sm font-medium text-ink transition-colors hover:bg-surface-soft"
-                >
+              <div className="flex items-center gap-4">
+                <Link to="/register" className="px-5 py-2.5 bg-canvas text-ink border border-hairline text-sm font-medium rounded-sm hover:bg-surface-soft transition-all">
                   Daftar
+                </Link>
+                <Link to="/login" className="px-5 py-2.5 bg-rausch text-white text-sm font-medium rounded-sm hover:bg-rausch-active transition-all">
+                  Masuk
                 </Link>
               </div>
             )}
           </div>
+
+          <div className="flex md:hidden">
+            <button
+              onClick={() => setIsMobileOpen((value) => !value)}
+              className="text-ink p-2"
+              aria-label="Buka menu navigasi"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                {isMobileOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
-      )}
-    </nav>
+
+        {isMobileOpen && (
+          <div className="md:hidden py-4 border-t border-hairline bg-canvas">
+            <div className="flex flex-col space-y-4 px-2">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className={`text-base font-medium py-1 ${isActive(link.href) ? 'text-rausch font-semibold' : 'text-ink'
+                    }`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+
+              <div className="border-t border-hairline pt-4 mt-2">
+                {token ? (
+                  <div className="flex flex-col space-y-4">
+                    <Link to={role === 'admin' ? '/admin' : '/user'} className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-surface-strong overflow-hidden">
+                        <img src={`https://ui-avatars.com/api/?name=${currentRole}&background=222222&color=ffffff`} alt="Profile" className="w-full h-full object-cover" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium text-ink capitalize">{currentRole}</div>
+                        <div className="text-xs text-muted">Lihat Dasbor</div>
+                      </div>
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="text-left text-base font-medium text-rausch"
+                    >
+                      Keluar
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col space-y-3">
+                    <Link to="/login" className="w-full py-3 bg-rausch text-white text-center text-sm font-medium rounded-sm">
+                      Masuk
+                    </Link>
+                    <Link to="/register" className="w-full py-3 bg-canvas text-ink text-center text-sm font-medium rounded-sm border border-hairline">
+                      Daftar
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </nav>
+    </header>
   );
 }
