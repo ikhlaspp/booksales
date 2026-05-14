@@ -319,11 +319,11 @@ export default function MainCatalog() {
       >
         {/* Greeting headline */}
         <h1 className="text-display-xl font-bold text-ink mb-6 max-w-xl leading-snug">
-          Eksplorasi dunia literasi{' '}
-          <span style={{ color: 'var(--color-rausch)' }}>tanpa batas.</span>
+          Temukan dan miliki buku cetak pilihan{' '}
+          <span style={{ color: 'var(--color-rausch)' }}>untuk melengkapi rak buku Anda.</span>
         </h1>
         <p className="text-body-md text-muted mb-8 max-w-md">
-          Temukan buku favoritmu dari ribuan koleksi pilihan terbaik.
+          Eksplorasi dunia literasi, langsung dikirim ke pintu rumah Anda dengan aman.
         </p>
 
         {/* Search Pill */}

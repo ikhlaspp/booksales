@@ -1,20 +1,24 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import AdminCrudForm, { FormField, FormInput, FormSelect } from '../../../components/admin/AdminCrudForm';
+import AdminCrudForm, { FormField, FormInput, FormTextarea } from '../../../components/admin/AdminCrudForm';
 
 const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 export default function AuthorFormModal({ isOpen, onClose, onSuccess, author = null }) {
   const isEditMode = !!author;
-  const [formData, setFormData] = useState({ name: '', email: '', status: 'Active' });
+  const [formData, setFormData] = useState({ name: '', bio: '', photo: '' });
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       if (isEditMode && author) {
-        setFormData({ name: author.name || '', email: author.email || '', status: author.status || 'Active' });
+        setFormData({ 
+          name: author.name || '', 
+          bio: author.bio || '', 
+          photo: author.photo || '' 
+        });
       } else {
-        setFormData({ name: '', email: '', status: 'Active' });
+        setFormData({ name: '', bio: '', photo: '' });
       }
     }
   }, [isOpen, isEditMode, author]);
@@ -66,26 +70,23 @@ export default function AuthorFormModal({ isOpen, onClose, onSuccess, author = n
         />
       </FormField>
 
-      <FormField label="Email" required>
-        <FormInput
-          type="email"
-          name="email"
-          value={formData.email}
+      <FormField label="Bio">
+        <FormTextarea
+          name="bio"
+          value={formData.bio}
           onChange={handleChange}
-          required
-          placeholder="email@contoh.com"
+          rows={4}
+          placeholder="Masukkan biografi singkat author"
         />
       </FormField>
 
-      <FormField label="Status">
-        <FormSelect
-          name="status"
-          value={formData.status}
+      <FormField label="Photo URL">
+        <FormInput
+          type="text"
+          name="photo"
+          value={formData.photo}
           onChange={handleChange}
-          options={[
-            { value: 'Active', label: 'Active' },
-            { value: 'Inactive', label: 'Inactive' },
-          ]}
+          placeholder="https://example.com/photo.jpg"
         />
       </FormField>
     </AdminCrudForm>

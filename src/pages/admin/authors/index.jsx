@@ -71,36 +71,28 @@ export default function AdminAuthors() {
           )}
           <div className="flex flex-col">
             <span className="font-bold text-ink">{item.name}</span>
-            {item.email && <span className="text-caption-sm text-muted">{item.email}</span>}
           </div>
         </div>
       ),
     },
     {
-      key: 'total_books',
-      label: 'Total Buku',
-      align: 'center',
+      key: 'bio',
+      label: 'Bio',
       render: (item) => (
-        <span className="bg-surface-strong px-2.5 py-1 rounded-sm text-body-sm font-medium text-ink">
-          {item.total_books ?? 0}
+        <span className="text-body-sm text-muted line-clamp-1 max-w-xs">
+          {item.bio || '-'}
         </span>
       ),
     },
     {
-      key: 'status',
-      label: 'Status',
-      render: (item) => {
-        const isActive = item.status === 'Active';
-        return (
-          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-badge font-semibold ${
-            isActive
-              ? 'bg-[#e8f5e9] text-[#2e7d32] border border-[#c8e6c9]'
-              : 'bg-surface-strong text-muted border border-hairline'
-          }`}>
-            {item.status || 'Unknown'}
-          </span>
-        );
-      },
+      key: 'books_count',
+      label: 'Total Buku',
+      align: 'center',
+      render: (item) => (
+        <span className="bg-surface-strong px-2.5 py-1 rounded-sm text-body-sm font-medium text-ink">
+          {item.books_count ?? 0}
+        </span>
+      ),
     },
   ];
 

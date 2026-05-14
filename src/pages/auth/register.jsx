@@ -3,48 +3,48 @@ import { Link, useNavigate } from 'react-router-dom';
 
 export default function Register() {
     const navigate = useNavigate();
-    
+
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
         username: '',
         password: '',
     });
-    
+
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
     const validate = () => {
         const newErrors = {};
-        
+
         if (!formData.fullName.trim()) {
             newErrors.fullName = "Nama lengkap tidak boleh kosong";
         }
-        
+
         if (!formData.email.trim()) {
             newErrors.email = "Email tidak boleh kosong";
         } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
             newErrors.email = "Format email tidak valid";
         }
-        
+
         if (!formData.username.trim()) {
             newErrors.username = "Username tidak boleh kosong";
         }
-        
+
         if (!formData.password) {
             newErrors.password = "Password tidak boleh kosong";
         } else if (formData.password.length < 6) {
             newErrors.password = "Password minimal 6 karakter";
         }
-        
+
         return newErrors;
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-        
+
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: null }));
         }
@@ -52,24 +52,24 @@ export default function Register() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         const formErrors = validate();
-        
+
         if (Object.keys(formErrors).length > 0) {
             setErrors(formErrors);
             return;
         }
 
         setIsLoading(true);
-        
+
         try {
             await new Promise(resolve => setTimeout(resolve, 1500));
-            
+
             console.log("Data Pendaftaran Berhasil:", formData);
-            
+
             alert("Registrasi berhasil! Silakan login.");
             navigate('/login');
-            
+
         } catch (error) {
             setErrors({ submit: "Terjadi kesalahan pada sistem. Silakan coba lagi." });
         } finally {
@@ -85,12 +85,12 @@ export default function Register() {
                         <span className="text-white font-bold text-3xl">B</span>
                     </div>
                 </div>
-                
+
                 <div className="text-center mb-10">
                     <h2 className="text-[28px] font-bold mb-2 tracking-tight text-[#222222]">Buat Akun Baru</h2>
                     <p className="text-[16px] text-[#6a6a6a]">Bergabunglah dan nikmati kemudahannya.</p>
                 </div>
-                
+
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     {errors.submit && (
                         <div className="p-3 text-[14px] font-medium text-[#c13515] bg-[#ffd1da]/30 rounded-[8px] border border-[#ffd1da]">
@@ -107,7 +107,7 @@ export default function Register() {
                                 value={formData.fullName}
                                 onChange={handleChange}
                                 className="absolute bottom-0 left-0 w-full bg-transparent px-3 pb-2 pt-6 text-[16px] text-[#222222] outline-none"
-                                placeholder="Joko Widodo"
+                                placeholder="Ikhlas Putra"
                             />
                         </div>
                         {errors.fullName && <p className="mt-1 pl-1 text-[12px] font-medium text-[#c13515]">{errors.fullName}</p>}
@@ -137,7 +137,7 @@ export default function Register() {
                                 value={formData.username}
                                 onChange={handleChange}
                                 className="absolute bottom-0 left-0 w-full bg-transparent px-3 pb-2 pt-6 text-[16px] text-[#222222] outline-none"
-                                placeholder="jokowi_123"
+                                placeholder="user123"
                             />
                         </div>
                         {errors.username && <p className="mt-1 pl-1 text-[12px] font-medium text-[#c13515]">{errors.username}</p>}

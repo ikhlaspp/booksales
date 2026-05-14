@@ -62,13 +62,16 @@ export default function Login() {
           
           localStorage.setItem('token', token);
           localStorage.setItem('user_id', user?.id || '');
+          localStorage.setItem('user_name', user?.name || '');
           localStorage.setItem('user_role', userRole);
+
+          window.dispatchEvent(new Event('authChange'));
 
           let defaultPath = '/';
           if (userRole === 'admin') {
               defaultPath = '/admin';
           } else if (userRole === 'user' || userRole === 'customer') {
-              defaultPath = '/user/profile'; 
+              defaultPath = '/profile'; 
           }
 
           const from = location.state?.from?.pathname || defaultPath;
@@ -93,6 +96,11 @@ export default function Login() {
             <div className="text-center mb-10">
                 <h2 className="text-[28px] font-bold mb-2 tracking-tight text-[#222222]">Selamat Datang</h2>
                 <p className="text-[16px] text-[#6a6a6a]">Silakan masukkan detail akun Anda untuk masuk.</p>
+                {location.state?.message && (
+                    <div className="mt-4 p-3 text-[14px] font-medium text-[#c13515] bg-[#ffd1da]/30 rounded-[8px] border border-[#ffd1da]">
+                        {location.state.message}
+                    </div>
+                )}
             </div>
             
             <form className="space-y-6" onSubmit={handleLogin}>
