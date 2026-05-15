@@ -1,8 +1,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { ShoppingCart, Trash2, X, CreditCard, ShoppingBag, Plus, Minus } from 'lucide-react';
-import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
@@ -17,7 +16,6 @@ export default function CartModal({ isOpen, onClose }) {
   const { cartItems, removeFromCart, clearCart, cartTotal, increaseQuantity, decreaseQuantity } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   // Lock scroll when modal is open
   useEffect(() => {
@@ -33,7 +31,7 @@ export default function CartModal({ isOpen, onClose }) {
 
   if (!isOpen) return null;
 
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
     const token = localStorage.getItem('token');
     if (!token) {
       onClose();
@@ -43,91 +41,8 @@ export default function CartModal({ isOpen, onClose }) {
 
     if (cartItems.length === 0) return;
 
-    try {
-      setIsCheckingOut(true);
-      
-      // Format items array according to new backend structure
-      const itemsPayload = cartItems.map(item => ({
-        book_id: item.id,
-        quantity: item.quantity || 1
-      }));
-
-      // Call single endpoint that handles bulk and returns snap_token
-      const response = await axios.post(`${API_BASE_URL}/transactions`, {
-        items: itemsPayload
-      }, {
-        headers: { 
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-      });
-
-      const { snap_token, transaction } = response.data;
-
-      // Make sure the snap.js is loaded with correct client key
-      if (snap_token) {
-        // Trigger Midtrans Snap popup
-        window.snap.pay(snap_token, {
-          onSuccess: async function(result){
-            // Update transaction status to dibayar
-            await updateTransactionStatus(transaction.id, 'dibayar', token);
-            alert('Pembayaran berhasil!');
-            clearCart();
-            onClose();
-            navigate('/profile');
-          },
-          onPending: function(result){
-            alert('Menunggu pembayaran Anda!');
-            clearCart();
-            onClose();
-            navigate('/profile');
-          },
-          onError: async function(result){
-            alert('Pembayaran gagal!');
-            await updateTransactionStatus(transaction.id, 'dibatalkan', token);
-            clearCart();
-            onClose();
-            navigate('/profile');
-          },
-          onClose: function(){
-            alert('Anda menutup popup tanpa menyelesaikan pembayaran');
-            clearCart();
-            onClose();
-            navigate('/profile');
-          }
-        });
-      } else {
-        // Fallback if no snap token
-        alert('Gagal mendapatkan token pembayaran.');
-      }
-
-    } catch (error) {
-      console.error('Checkout error:', error.response?.data || error.message);
-      if (error.response?.status === 401) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user_role');
-        localStorage.removeItem('user_id');
-        localStorage.removeItem('user_name');
-        window.dispatchEvent(new Event('authChange'));
-        onClose();
-        navigate('/login', { state: { message: "Sesi Anda telah berakhir. Silakan login kembali." } });
-      } else {
-        alert(error.response?.data?.message || 'Terjadi kesalahan saat checkout. Silakan coba lagi.');
-      }
-    } finally {
-      setIsCheckingOut(false);
-    }
-  };
-
-  const updateTransactionStatus = async (transactionId, status, token) => {
-    try {
-      await axios.put(`${API_BASE_URL}/transactions/${transactionId}`, { status }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-    } catch (error) {
-      console.error('Failed to update status', error);
-    }
+    onClose();
+    navigate('/checkout');
   };
 
   return (
@@ -230,32 +145,19 @@ export default function CartModal({ isOpen, onClose }) {
         {/* Footer / Summary */}
         {cartItems.length > 0 && (
           <div className="p-6 bg-canvas border-t border-hairline shadow-[0_-4px_16px_rgba(0,0,0,0.04)]">
-            <div className="space-y-3 mb-6">
-              <div className="flex justify-between text-body-sm text-muted">
-                <span>Subtotal</span>
-                <span>{formatRupiah(cartTotal)}</span>
-              </div>
-              <div className="flex justify-between text-body-sm text-muted">
-                <span>Biaya Layanan</span>
-                <span className="text-[#2e7d32] font-medium">Gratis</span>
-              </div>
-              <div className="flex justify-between items-center pt-2">
+            <div className="mb-6">
+              <div className="flex justify-between items-center">
                 <span className="text-body-md font-bold text-ink">Total Tagihan</span>
                 <span className="text-title-md font-bold text-rausch">{formatRupiah(cartTotal)}</span>
               </div>
             </div>
 
-            <button 
+            <button
               onClick={handleCheckout}
-              disabled={isCheckingOut}
-              className="w-full py-4 bg-[#ff385c] text-white rounded-full font-bold text-button-lg transition-all hover:bg-[#e00b41] hover:shadow-xl active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3"
+              className="w-full py-4 bg-[#ff385c] text-white rounded-full font-bold text-button-lg transition-all hover:bg-[#e00b41] hover:shadow-xl active:scale-[0.98] flex items-center justify-center gap-3"
             >
-              {isCheckingOut ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-              ) : (
-                <CreditCard className="w-5 h-5" />
-              )}
-              {isCheckingOut ? 'Memproses...' : 'Checkout Sekarang'}
+              <CreditCard className="w-5 h-5" />
+              Checkout Sekarang
             </button>
             
             <button 
