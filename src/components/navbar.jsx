@@ -95,7 +95,7 @@ export default function Navbar() {
             <div className="hidden md:flex items-center gap-4 relative">
               {/* Cart Icon - Triggers Modal */}
               {token && (
-                <button 
+                <button
                   onClick={() => setIsCartOpen(true)}
                   className="relative p-2 text-ink hover:bg-surface-soft rounded-full transition-colors"
                 >
@@ -142,7 +142,7 @@ export default function Navbar() {
                   {token ? (
                     <>
                       <div className="px-4 py-2 mb-1 border-b border-hairline">
-                        <p className="text-sm font-semibold text-ink capitalize">{currentRole}</p>
+                        <p className="text-sm font-semibold text-ink capitalize">{displayName}</p>
                       </div>
                       {role === 'admin' ? (
                         <Link to="/admin" className="block px-4 py-3 text-sm text-ink font-medium hover:bg-surface-soft transition-colors">
@@ -152,9 +152,6 @@ export default function Navbar() {
                         <>
                           <Link to="/profile" className="block px-4 py-3 text-sm text-ink font-medium hover:bg-surface-soft transition-colors">
                             Profil Saya
-                          </Link>
-                          <Link to="/profile" className="block px-4 py-3 text-sm text-ink font-medium hover:bg-surface-soft transition-colors">
-                            Pesanan
                           </Link>
                         </>
                       )}
@@ -189,23 +186,23 @@ export default function Navbar() {
                   </span>
                 )}
               </button>
-               <button
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="flex items-center gap-2 bg-canvas p-1 pl-3 rounded-full border border-hairline shadow-sm"
-                >
-                  <svg className="w-5 h-5 text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                  <div className="w-8 h-8 rounded-full bg-surface-strong flex items-center justify-center overflow-hidden ml-1">
-                    {token ? (
-                       <img src={`https://ui-avatars.com/api/?name=${displayName}&background=222222&color=ffffff`} alt="Profile" className="w-full h-full object-cover" />
-                    ) : (
-                       <svg className="w-5 h-5 text-muted" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                      </svg>
-                    )}
-                  </div>
-                </button>
+              <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="flex items-center gap-2 bg-canvas p-1 pl-3 rounded-full border border-hairline shadow-sm"
+              >
+                <svg className="w-5 h-5 text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <div className="w-8 h-8 rounded-full bg-surface-strong flex items-center justify-center overflow-hidden ml-1">
+                  {token ? (
+                    <img src={`https://ui-avatars.com/api/?name=${displayName}&background=222222&color=ffffff`} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <svg className="w-5 h-5 text-muted" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+              </button>
             </div>
           </div>
 
@@ -227,11 +224,10 @@ export default function Navbar() {
                   {token ? (
                     <div className="flex flex-col space-y-4">
                       {role === 'admin' ? (
-                         <Link to="/admin" className="text-base font-medium text-ink">Dasbor Admin</Link>
+                        <Link to="/admin" className="text-base font-medium text-ink">Dasbor Admin</Link>
                       ) : (
                         <>
                           <Link to="/profile" className="text-base font-medium text-ink">Profil Saya</Link>
-                          <Link to="/profile" className="text-base font-medium text-ink">Pesanan</Link>
                         </>
                       )}
                       <button
@@ -259,9 +255,9 @@ export default function Navbar() {
       </header>
 
       {/* Cart Modal Integration */}
-      <CartModal 
-        isOpen={isCartOpen} 
-        onClose={() => setIsCartOpen(false)} 
+      <CartModal
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
       />
     </>
   );

@@ -32,11 +32,10 @@ export default function App() {
             <Route path="/books/:id" element={<BookDetail />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/cart" element={<Cart />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Route>
-          
+
           {/* Rute Dasbor Pengguna */}
           <Route element={<ProtectedRoute allowedRoles={['user']} />}>
             <Route path="/user" element={<PublicLayout />}>
@@ -63,15 +62,15 @@ export default function App() {
               <Route path="contacts" element={<AdminContacts />} />
             </Route>
           </Route>
-          
+
           {/* Fallback 404 */}
           <Route path="*" element={
             <div className="min-h-screen flex flex-col items-center justify-center text-center bg-canvas text-ink">
               <div className="space-y-4">
                 <h2 className="text-display-xl font-bold">404</h2>
                 <p className="text-body-md text-muted">Halaman yang Anda cari tidak ditemukan.</p>
-                <a 
-                  href="/" 
+                <a
+                  href="/"
                   className="inline-block mt-4 px-6 py-2 bg-rausch text-white rounded-sm hover:bg-rausch-active transition-colors"
                 >
                   Kembali ke Beranda
