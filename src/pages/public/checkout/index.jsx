@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../../context/CartContext';
 import { ShieldCheck, Lock, ArrowLeft, Package, CreditCard, AlertCircle, CheckCircle2, Clock, X, MapPin, Plus, Minus, Trash2 } from 'lucide-react';
 import axios from 'axios';
+import ConfirmModal from '../../../components/ConfirmModal';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 const SNAP_SCRIPT_URL = 'https://app.sandbox.midtrans.com/snap/snap.js';
@@ -129,6 +130,7 @@ export default function Checkout() {
   const { cartItems, clearCart, cartTotal, increaseQuantity, decreaseQuantity, removeFromCart } = useCart();
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [toast, setToast] = useState(null);
   const [user, setUser] = useState(null);
   const [isLoadingUser, setIsLoadingUser] = useState(true);
@@ -164,6 +166,13 @@ export default function Checkout() {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUser(res.data);
+        if (res.data.address && res.data.city && res.data.postal_code) {
+          setSavedAddress({
+            street: res.data.address,
+            city: res.data.city,
+            postalCode: res.data.postal_code,
+          });
+        }
       } catch {
         navigate('/login');
       } finally {
@@ -202,6 +211,22 @@ export default function Checkout() {
     setToast({ message, type });
   };
 
+  const handleSaveAddress = async (data) => {
+    const token = localStorage.getItem('token');
+    try {
+      await axios.put(`${API_BASE_URL}/user/profile`, {
+        address: data.street,
+        city: data.city,
+        postal_code: data.postalCode,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    } catch {
+      showToast('Gagal menyimpan alamat ke profil.', 'error');
+    }
+    setSavedAddress(data);
+  };
+
   const handlePayment = async () => {
     if (isProcessing || cartItems.length === 0) return;
 
@@ -236,7 +261,7 @@ export default function Checkout() {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      const { snap_token: snapToken, client_key: clientKey } = response.data;
+      const { snap_token: snapToken, client_key: clientKey, transaction } = response.data;
 
       if (!snapToken) {
         showToast('Tidak dapat membuat token pembayaran. Silakan coba lagi nanti.', 'error');
@@ -260,10 +285,10 @@ export default function Checkout() {
       window.snap.pay(snapToken, {
         onSuccess: (result) => {
           clearCart();
-          navigate('/profile', {
+          navigate(`/profile/orders/${transaction.id}`, {
             state: {
               checkoutSuccess: true,
-              orderId: result.order_id,
+              orderId: transaction.order_number,
             }
           });
         },
@@ -283,10 +308,7 @@ export default function Checkout() {
           );
         },
         onClose: () => {
-          showToast(
-            'Anda menutup halaman pembayaran. Tidak perlu khawatir — keranjang belanja Anda tetap aman.',
-            'info'
-          );
+          navigate('/profile');
         }
       });
 
@@ -338,7 +360,7 @@ export default function Checkout() {
       <AddressModal
         isOpen={isAddressModalOpen}
         onClose={() => setIsAddressModalOpen(false)}
-        onSave={setSavedAddress}
+        onSave={handleSaveAddress}
         initialData={savedAddress}
       />
 
@@ -522,7 +544,7 @@ export default function Checkout() {
               <div className="p-6 pt-4">
                 <button
                   id="checkout-pay-button"
-                  onClick={handlePayment}
+                  onClick={() => setIsConfirmOpen(true)}
                   disabled={isProcessing || !savedAddress}
                   className="w-full py-4 bg-rausch text-white rounded-full font-bold text-button-lg transition-all hover:bg-rausch-active hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 group"
                 >
@@ -551,6 +573,18 @@ export default function Checkout() {
 
         </div>
       </div>
+
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        onConfirm={() => {
+          setIsConfirmOpen(false);
+          handlePayment();
+        }}
+        isLoading={isProcessing}
+        title="Konfirmasi Pembayaran"
+        message={`Total yang akan dibayar: ${formatRupiah(grandTotal)}. Lanjutkan ke pembayaran?`}
+      />
     </div>
   );
 }
