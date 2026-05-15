@@ -283,7 +283,7 @@ export default function Checkout() {
       }
 
       window.snap.pay(snapToken, {
-        onSuccess: (result) => {
+        onSuccess: () => {
           clearCart();
           navigate(`/profile/orders/${transaction.id}`, {
             state: {
