@@ -3,6 +3,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../../context/CartContext';
 import { MapPin, ShoppingBag, CreditCard, ChevronLeft, Plus, Minus, Trash2, X } from 'lucide-react';
+import ConfirmModal from '../../components/ConfirmModal';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
@@ -28,6 +29,7 @@ export default function Checkout() {
   const [tempAddress, setEditAddress] = useState({ ...address });
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   // Calculations
   const subtotal = cartTotal;
@@ -65,10 +67,9 @@ export default function Checkout() {
       // Send checkout data to backend
       const response = await axios.post(`${API_BASE_URL}/transactions`, {
         items: itemsPayload,
-        address: `${address.street}, ${address.city}, ${address.zipCode}`,
-        tax: tax,
-        shipping: shipping,
-        total: grandTotal
+        shipping_address: address.street,
+        city: address.city,
+        postal_code: address.zipCode
       }, {
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -242,8 +243,8 @@ export default function Checkout() {
                 </div>
               </div>
 
-              <button 
-                onClick={handlePayment}
+              <button
+                onClick={() => setIsConfirmOpen(true)}
                 disabled={isProcessing || cartItems.length === 0}
                 className="w-full py-4 bg-rausch text-white rounded-full font-bold text-button-lg transition-all hover:bg-rausch-active hover:shadow-xl active:scale-[0.98] flex items-center justify-center gap-3 disabled:opacity-50"
               >
@@ -284,12 +285,12 @@ export default function Checkout() {
                 <X className="w-5 h-5 text-muted" />
               </button>
             </div>
-            
+
             <form onSubmit={handleUpdateAddress} className="space-y-4">
               <div>
                 <label className="block text-caption-sm font-bold text-ink uppercase mb-1.5">Nama Jalan & No Rumah</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   className="w-full px-4 py-3 border border-hairline rounded-md focus:ring-1 focus:ring-rausch outline-none text-body-md"
                   value={tempAddress.street}
                   onChange={(e) => setEditAddress({ ...tempAddress, street: e.target.value })}
@@ -298,8 +299,8 @@ export default function Checkout() {
               </div>
               <div>
                 <label className="block text-caption-sm font-bold text-ink uppercase mb-1.5">Kota</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   className="w-full px-4 py-3 border border-hairline rounded-md focus:ring-1 focus:ring-rausch outline-none text-body-md"
                   value={tempAddress.city}
                   onChange={(e) => setEditAddress({ ...tempAddress, city: e.target.value })}
@@ -308,15 +309,15 @@ export default function Checkout() {
               </div>
               <div>
                 <label className="block text-caption-sm font-bold text-ink uppercase mb-1.5">Kode Pos</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   className="w-full px-4 py-3 border border-hairline rounded-md focus:ring-1 focus:ring-rausch outline-none text-body-md"
                   value={tempAddress.zipCode}
                   onChange={(e) => setEditAddress({ ...tempAddress, zipCode: e.target.value })}
                   required
                 />
               </div>
-              <button 
+              <button
                 type="submit"
                 className="w-full mt-6 py-3 bg-ink text-white rounded-full font-bold hover:bg-ink/90 transition-colors"
               >
@@ -326,6 +327,18 @@ export default function Checkout() {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        onConfirm={() => {
+          setIsConfirmOpen(false);
+          handlePayment();
+        }}
+        isLoading={isProcessing}
+        title="Konfirmasi Pembayaran"
+        message={`Total yang akan dibayar: ${formatRupiah(grandTotal)}. Lanjutkan ke pembayaran?`}
+      />
 
     </div>
   );
