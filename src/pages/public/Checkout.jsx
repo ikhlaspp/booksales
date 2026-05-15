@@ -85,22 +85,20 @@ export default function Checkout() {
             await axios.put(`${API_BASE_URL}/transactions/${transaction.id}`, { status: 'dibayar' }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            alert('Pembayaran Berhasil!');
             clearCart();
-            navigate('/profile');
+            navigate(`/profile/orders/${transaction.id}`, {
+              state: { checkoutSuccess: true, orderId: transaction.order_number }
+            });
           },
           onPending: function(result){
-            alert('Menunggu pembayaran Anda.');
             clearCart();
             navigate('/profile');
           },
           onError: function(result){
-            alert('Pembayaran Gagal!');
             setIsProcessing(false);
           },
           onClose: function(){
-            alert('Anda menutup jendela pembayaran.');
-            setIsProcessing(false);
+            navigate('/profile');
           }
         });
       }
