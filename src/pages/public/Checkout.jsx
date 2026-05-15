@@ -82,9 +82,13 @@ export default function Checkout() {
       if (snap_token) {
         window.snap.pay(snap_token, {
           onSuccess: async function(result){
-            await axios.put(`${API_BASE_URL}/transactions/${transaction.id}`, { status: 'dibayar' }, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            try {
+              await axios.put(`${API_BASE_URL}/transactions/${transaction.id}`, { status: 'dibayar' }, {
+                  headers: { Authorization: `Bearer ${token}` }
+              });
+            } catch (e) {
+              console.error('Status update failed, webhook will reconcile:', e);
+            }
             clearCart();
             navigate(`/profile/orders/${transaction.id}`, {
               state: { checkoutSuccess: true, orderId: transaction.order_number }
@@ -98,6 +102,7 @@ export default function Checkout() {
             setIsProcessing(false);
           },
           onClose: function(){
+            clearCart();
             navigate('/profile');
           }
         });
