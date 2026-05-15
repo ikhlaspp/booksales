@@ -17,6 +17,7 @@ import AdminAuthors from './pages/admin/authors/index';
 import AdminBooks from './pages/admin/books/index';
 import AdminTransactions from './pages/admin/transactions/index';
 import AdminUsers from './pages/admin/users/index';
+import AdminContacts from './pages/admin/contacts/index';
 import { CartProvider } from './context/CartContext';
 
 export default function App() {
@@ -57,6 +58,7 @@ export default function App() {
               <Route path="genres" element={<AdminGenres />} />
               <Route path="books" element={<AdminBooks />} />
               <Route path="transactions" element={<AdminTransactions />} />
+              <Route path="contacts" element={<AdminContacts />} />
             </Route>
           </Route>
           
