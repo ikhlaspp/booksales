@@ -70,7 +70,7 @@ export default function Contact() {
                   className="w-full bg-canvas text-ink text-body-md rounded-sm border border-hairline focus:border-ink focus:ring-0 px-3 py-3 h-14 transition-colors"
                   placeholder={placeholder}
                 />
-                {errors[id] && <p className="text-xs text-rausch mt-1">{errors[id][0]}</p>}
+                {errors[id] && <p className="text-xs text-rausch mt-1">{errors[id]?.[0]}</p>}
               </div>
             ))}
 
@@ -82,7 +82,7 @@ export default function Contact() {
                 className="w-full bg-canvas text-ink text-body-md rounded-sm border border-hairline focus:border-ink focus:ring-0 px-3 py-3 transition-colors resize-none"
                 placeholder="Tulis pesan Anda di sini..."
               />
-              {errors.message && <p className="text-xs text-rausch mt-1">{errors.message[0]}</p>}
+              {errors.message && <p className="text-xs text-rausch mt-1">{errors.message?.[0]}</p>}
             </div>
 
             <button
