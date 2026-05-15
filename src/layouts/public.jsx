@@ -1,6 +1,7 @@
 import { Outlet, useLocation, Navigate } from 'react-router-dom';
 import Navbar from '../components/navbar';
 import Footer from '../components/footer';
+import ChatWidget from '../components/ChatWidget';
 
 export default function PublicLayout() {
   const location = useLocation();
@@ -28,6 +29,7 @@ export default function PublicLayout() {
       )}
 
       <Footer />
+      <ChatWidget />
     </div>
   );
 }
