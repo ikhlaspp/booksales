@@ -135,6 +135,7 @@ export default function Checkout() {
   const [user, setUser] = useState(null);
   const [isLoadingUser, setIsLoadingUser] = useState(true);
   const snapLoaded = useRef(false);
+  const snapActive = useRef(false);
 
   // Address State
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
@@ -145,9 +146,9 @@ export default function Checkout() {
   const shippingCost = 10000;
   const grandTotal = cartTotal + taxAmount + shippingCost;
 
-  // Redirect if cart is empty
+  // Redirect if cart is empty (guard against firing during/after payment flow)
   useEffect(() => {
-    if (!isLoadingUser && cartItems.length === 0) {
+    if (!isLoadingUser && !snapActive.current && cartItems.length === 0) {
       navigate('/cart', { replace: true });
     }
   }, [cartItems, isLoadingUser, navigate]);
@@ -282,8 +283,16 @@ export default function Checkout() {
         return;
       }
 
+      snapActive.current = true;
       window.snap.pay(snapToken, {
-        onSuccess: () => {
+        onSuccess: async () => {
+          try {
+            await axios.put(`${API_BASE_URL}/transactions/${transaction.id}`, { status: 'dibayar' }, {
+              headers: { Authorization: `Bearer ${token}` }
+            });
+          } catch (e) {
+            console.error('Status update failed:', e);
+          }
           clearCart();
           navigate(`/profile/orders/${transaction.id}`, {
             state: {
@@ -298,22 +307,27 @@ export default function Checkout() {
             'pending'
           );
           clearCart();
-          setTimeout(() => navigate('/profile'), 3000);
+          navigate('/profile');
         },
         onError: (result) => {
           console.error('Payment error:', result);
+          snapActive.current = false;
+          setIsProcessing(false);
           showToast(
             'Terjadi kendala saat memproses pembayaran. Keranjang belanja Anda tetap tersimpan — silakan coba lagi.',
             'error'
           );
         },
         onClose: () => {
+          snapActive.current = false;
+          setIsProcessing(false);
           navigate('/profile');
         }
       });
 
     } catch (error) {
       console.error('Checkout error:', error);
+      snapActive.current = false;
 
       const errorMsg = error.response?.data?.message;
 
@@ -332,7 +346,6 @@ export default function Checkout() {
           'error'
         );
       }
-    } finally {
       setIsProcessing(false);
     }
   };

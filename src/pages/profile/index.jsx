@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { CheckCircle2, X, MapPin, ChevronRight, Clock } from 'lucide-react';
@@ -20,14 +20,27 @@ const formatDate = (dateStr) => {
   });
 };
 
-function PendingCountdownBadge({ createdAt }) {
+function PendingCountdownBadge({ createdAt, transactionId, onExpire }) {
   const expiresAt = new Date(createdAt).getTime() + 60 * 60 * 1000;
   const { minutes, seconds, isExpired } = useCountdown(expiresAt);
+  const hasExpired = useRef(false);
+
+  useEffect(() => {
+    if (isExpired && !hasExpired.current) {
+      hasExpired.current = true;
+      const token = localStorage.getItem('token');
+      axios.put(`${API_URL}/api/transactions/${transactionId}`, { status: 'dibatalkan' }, {
+        headers: { Authorization: `Bearer ${token}` }
+      }).then(() => {
+        onExpire?.(transactionId);
+      }).catch(console.error);
+    }
+  }, [isExpired, transactionId, onExpire]);
 
   if (isExpired) {
     return (
       <span className="flex items-center gap-1 text-[11px] font-semibold text-[#e00b41]">
-        <Clock className="w-3 h-3" /> Kadaluwarsa
+        <Clock className="w-3 h-3" /> Pembayaran Gagal
       </span>
     );
   }
@@ -100,6 +113,12 @@ export default function Profile() {
   }, [navigate]);
 
   const hasAddress = !!(user?.address && user?.city && user?.postal_code);
+
+  const handleTransactionExpire = (transactionId) => {
+    setTransactions(prev => prev.map(tx =>
+      tx.id === transactionId ? { ...tx, status: 'dibatalkan' } : tx
+    ));
+  };
 
   const handleSaveAddress = async (e) => {
     e.preventDefault();
@@ -276,7 +295,11 @@ export default function Profile() {
                       {/* Total + countdown */}
                       <div className="flex justify-between items-center mt-3 pt-3 border-t border-hairline-soft">
                         {isPending ? (
-                          <PendingCountdownBadge createdAt={tx.created_at} />
+                          <PendingCountdownBadge
+                            createdAt={tx.created_at}
+                            transactionId={tx.id}
+                            onExpire={handleTransactionExpire}
+                          />
                         ) : (
                           <div />
                         )}

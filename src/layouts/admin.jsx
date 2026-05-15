@@ -16,11 +16,10 @@ export default function AdminLayout() {
     { name: "Books", href: "/admin/books", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /> },
     { name: "Transactions", href: "/admin/transactions", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /> },
     { name: "Pesan", href: "/admin/contacts", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /> },
-    { name: "Profile", href: "/admin/profile", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /> },
   ];
 
-  const pageTitle = location.pathname === "/admin" 
-    ? "Overview" 
+  const pageTitle = location.pathname === "/admin"
+    ? "Overview"
     : location.pathname.split('/').pop().replace(/-/g, ' ');
 
   const handleLogout = () => {
@@ -40,7 +39,7 @@ export default function AdminLayout() {
           </div>
           {isSidebarExpanded && <span className="text-lg font-semibold tracking-tight text-ink ml-3 whitespace-nowrap overflow-hidden">BookSales.</span>}
         </div>
-        
+
         <nav className={`flex-1 overflow-y-auto py-6 space-y-1.5 ${isSidebarExpanded ? 'px-4' : 'px-2'}`}>
           {navigation.map((item) => {
             const isActive = location.pathname === item.href || (item.href !== '/admin' && location.pathname.startsWith(item.href));
@@ -48,11 +47,10 @@ export default function AdminLayout() {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`flex items-center py-3 rounded-md text-sm font-medium transition-all duration-200 ${
-                  isActive
+                className={`flex items-center py-3 rounded-md text-sm font-medium transition-all duration-200 ${isActive
                     ? 'bg-rausch text-white font-semibold'
                     : 'text-muted hover:bg-surface-soft hover:text-ink'
-                } ${isSidebarExpanded ? 'px-4' : 'justify-center px-0'}`}
+                  } ${isSidebarExpanded ? 'px-4' : 'justify-center px-0'}`}
                 title={!isSidebarExpanded ? item.name : undefined}
               >
                 <svg className={`w-5 h-5 flex-shrink-0 ${isSidebarExpanded ? 'mr-3' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -76,9 +74,9 @@ export default function AdminLayout() {
               </div>
             )}
           </div>
-          
-          <button 
-            onClick={handleLogout} 
+
+          <button
+            onClick={handleLogout}
             className={`flex items-center w-full py-2.5 text-sm font-medium text-rausch rounded-sm hover:bg-rausch-disabled/30 transition-colors group ${isSidebarExpanded ? 'px-3' : 'justify-center px-0'}`}
             title={!isSidebarExpanded ? "Keluar" : undefined}
           >
@@ -99,7 +97,7 @@ export default function AdminLayout() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            <button 
+            <button
               onClick={() => setIsSidebarExpanded(!isSidebarExpanded)}
               className="hidden md:block mr-4 text-muted hover:text-ink transition-colors"
             >
