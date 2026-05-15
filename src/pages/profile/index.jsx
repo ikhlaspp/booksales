@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { CheckCircle2, X, MapPin, ChevronRight, Clock } from 'lucide-react';
+import { CheckCircle2, X, MapPin, Clock, Search } from 'lucide-react';
 import { useCountdown } from '../../hooks/useCountdown';
 
 const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
@@ -53,9 +53,323 @@ function PendingCountdownBadge({ createdAt, transactionId, onExpire }) {
   );
 }
 
+const STATUS_TABS = [
+  { value: '', label: 'Semua' },
+  { value: 'pending', label: 'Pending' },
+  { value: 'dibayar', label: 'Dibayar' },
+  { value: 'dikirim', label: 'Dikirim' },
+  { value: 'selesai', label: 'Selesai' },
+  { value: 'dibatalkan', label: 'Dibatalkan' },
+];
+
+function getStatusClass(status) {
+  if (status === 'dibayar' || status === 'selesai') return 'bg-[#e8f5e9] text-[#2e7d32] border-[#c8e6c9]';
+  if (status === 'pending')   return 'bg-[#fff3cd] text-[#856404] border-[#ffeeba]';
+  if (status === 'dikirim')   return 'bg-[#e3f2fd] text-[#1565c0] border-[#bbdefb]';
+  return 'bg-surface-strong text-muted border-hairline';
+}
+
+function getPageNumbers(currentPage, lastPage) {
+  if (lastPage <= 7) return Array.from({ length: lastPage }, (_, i) => i + 1);
+  if (currentPage <= 4)           return [1, 2, 3, 4, 5, '...', lastPage];
+  if (currentPage >= lastPage - 3) return [1, '...', lastPage - 4, lastPage - 3, lastPage - 2, lastPage - 1, lastPage];
+  return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', lastPage];
+}
+
+function OrdersTable() {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [activeStatus, setActiveStatus] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [transactions, setTransactions] = useState([]);
+  const [pagination, setPagination] = useState({ total: 0, last_page: 1 });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const tableTopRef = useRef(null);
+
+  // Debounce raw search: after 400ms update debouncedSearch and reset to page 1
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+      setCurrentPage(1);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // Fetch transactions — all setState calls inside async function to satisfy lint
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const params = { page: currentPage, per_page: 10 };
+    if (debouncedSearch) params.search = debouncedSearch;
+    if (activeStatus)   params.status  = activeStatus;
+
+    const fetchData = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const res = await axios.get(`${API_URL}/api/user/transactions`, {
+          headers: { Authorization: `Bearer ${token}` },
+          params,
+        });
+        setTransactions(res.data.data || []);
+        setPagination({ total: res.data.total || 0, last_page: res.data.last_page || 1 });
+      } catch (err) {
+        if (err.response?.status === 401) {
+          localStorage.removeItem('token');
+          navigate('/login');
+        } else {
+          setError('Gagal memuat pesanan. Coba lagi.');
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [currentPage, debouncedSearch, activeStatus, navigate, retryCount]);
+
+  const handleTransactionExpire = (transactionId) => {
+    setTransactions(prev =>
+      prev.map(tx => (tx.id === transactionId ? { ...tx, status: 'dibatalkan' } : tx))
+    );
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    tableTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const startItem = pagination.total === 0 ? 0 : (currentPage - 1) * 10 + 1;
+  const endItem   = Math.min(currentPage * 10, pagination.total);
+
+  return (
+    <div ref={tableTopRef}>
+      {/* Search bar */}
+      <div className="relative mb-4">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
+        <input
+          type="text"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Cari nomor pesanan atau judul buku..."
+          className="w-full bg-surface-soft border border-hairline rounded-[8px] pl-10 pr-10 py-2.5 text-body-sm focus:outline-none focus:border-ink transition-colors"
+        />
+        {search && (
+          <button
+            onClick={() => setSearch('')}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-ink transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
+      </div>
+
+      {/* Status tab pills */}
+      <div className="flex gap-2 overflow-x-auto pb-2 mb-6">
+        {STATUS_TABS.map(tab => (
+          <button
+            key={tab.value}
+            onClick={() => { setActiveStatus(tab.value); setCurrentPage(1); }}
+            className={`shrink-0 px-4 py-1.5 rounded-full text-body-sm font-semibold transition-colors ${
+              activeStatus === tab.value
+                ? 'bg-[#ff385c] text-white'
+                : 'border border-hairline text-muted hover:text-ink hover:border-ink'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Error state */}
+      {error && (
+        <div className="p-8 text-center border border-hairline border-dashed rounded-[14px] bg-surface-soft">
+          <p className="text-body-sm text-muted mb-3">{error}</p>
+          <button
+            onClick={() => { setError(null); setRetryCount(c => c + 1); }}
+            className="text-body-sm font-semibold text-[#ff385c] hover:underline"
+          >
+            Coba lagi
+          </button>
+        </div>
+      )}
+
+      {/* Loading spinner */}
+      {isLoading && !error && (
+        <div className="py-12 flex justify-center">
+          <div className="w-6 h-6 border-4 border-hairline border-t-[#ff385c] rounded-full animate-spin" />
+        </div>
+      )}
+
+      {/* Empty state */}
+      {!isLoading && !error && transactions.length === 0 && (
+        <div className="p-10 text-center border border-hairline border-dashed rounded-[14px] bg-surface-soft">
+          <Search className="w-8 h-8 text-muted mx-auto mb-3" />
+          <p className="text-body-md text-muted mb-3">Tidak ada pesanan ditemukan.</p>
+          {(search || activeStatus) && (
+            <button
+              onClick={() => { setSearch(''); setActiveStatus(''); }}
+              className="text-body-sm font-semibold text-[#ff385c] hover:underline"
+            >
+              Tampilkan semua pesanan
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Table + Pagination */}
+      {!isLoading && !error && transactions.length > 0 && (
+        <>
+          <div className="overflow-x-auto rounded-[14px] border border-hairline">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-surface-soft border-b border-hairline">
+                  <th className="px-4 py-3 text-caption-sm font-semibold text-muted uppercase tracking-wider whitespace-nowrap">No. Pesanan</th>
+                  <th className="px-4 py-3 text-caption-sm font-semibold text-muted uppercase tracking-wider">Buku</th>
+                  <th className="px-4 py-3 text-caption-sm font-semibold text-muted uppercase tracking-wider text-center whitespace-nowrap">Jml. Item</th>
+                  <th className="px-4 py-3 text-caption-sm font-semibold text-muted uppercase tracking-wider text-right whitespace-nowrap">Total</th>
+                  <th className="px-4 py-3 text-caption-sm font-semibold text-muted uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-hairline">
+                {transactions.map(tx => {
+                  const hasItems = tx.items && tx.items.length > 0;
+                  const firstBook = hasItems ? tx.items[0].book : tx.book;
+                  const extraCount = hasItems ? tx.items.length - 1 : 0;
+                  const totalQty  = hasItems
+                    ? tx.items.reduce((sum, item) => sum + item.quantity, 0)
+                    : 1;
+
+                  return (
+                    <tr key={tx.id} className="hover:bg-surface-soft transition-colors">
+                      {/* No. Pesanan */}
+                      <td className="px-4 py-3.5">
+                        <p className="text-body-sm font-bold text-ink whitespace-nowrap">{tx.order_number}</p>
+                        <p className="text-caption-sm text-muted mt-0.5 whitespace-nowrap">{formatDate(tx.created_at)}</p>
+                      </td>
+
+                      {/* Buku */}
+                      <td className="px-4 py-3.5">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-10 bg-surface-strong rounded-sm overflow-hidden shrink-0">
+                            {firstBook?.cover_photo ? (
+                              <img
+                                src={firstBook.cover_photo.startsWith('http') ? firstBook.cover_photo : `${API_URL}/storage/covers/${firstBook.cover_photo}`}
+                                alt={firstBook.title}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-muted text-[10px]">—</div>
+                            )}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-body-sm font-semibold text-ink line-clamp-1">{firstBook?.title || 'Buku Dihapus'}</p>
+                            {extraCount > 0 && (
+                              <p className="text-caption-sm text-muted">+{extraCount} lainnya</p>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Jml. Item */}
+                      <td className="px-4 py-3.5 text-center">
+                        <span className="text-body-sm text-ink">{totalQty}</span>
+                      </td>
+
+                      {/* Total */}
+                      <td className="px-4 py-3.5 text-right">
+                        <span className="text-body-sm font-bold text-ink whitespace-nowrap">{formatRupiah(tx.total_amount)}</span>
+                      </td>
+
+                      {/* Status */}
+                      <td className="px-4 py-3.5">
+                        <div className="flex flex-col gap-1 items-start">
+                          <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider border whitespace-nowrap ${getStatusClass(tx.status)}`}>
+                            {tx.status}
+                          </span>
+                          {tx.status === 'pending' && (
+                            <PendingCountdownBadge
+                              createdAt={tx.created_at}
+                              transactionId={tx.id}
+                              onExpire={handleTransactionExpire}
+                            />
+                          )}
+                        </div>
+                      </td>
+
+                      {/* Aksi */}
+                      <td className="px-4 py-3.5">
+                        <Link
+                          to={`/profile/orders/${tx.id}`}
+                          className="px-3 py-1.5 border border-hairline rounded-full text-caption-sm font-semibold text-ink hover:bg-surface-soft transition-colors whitespace-nowrap"
+                        >
+                          Lihat
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-5">
+            <p className="text-caption-sm text-muted">
+              Menampilkan {startItem}–{endItem} dari {pagination.total} pesanan
+            </p>
+            <div className="flex items-center gap-1 flex-wrap justify-center">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-3 py-1.5 rounded-full border border-hairline text-body-sm font-semibold text-ink disabled:opacity-40 disabled:cursor-not-allowed hover:bg-surface-soft transition-colors"
+              >
+                ← Prev
+              </button>
+
+              {getPageNumbers(currentPage, pagination.last_page).map((page, idx) =>
+                page === '...' ? (
+                  <span
+                    key={`ellipsis-${idx}`}
+                    className="w-8 h-8 flex items-center justify-center text-muted text-body-sm select-none"
+                  >
+                    ...
+                  </span>
+                ) : (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    className={`w-8 h-8 rounded-full text-body-sm font-semibold transition-colors ${
+                      currentPage === page
+                        ? 'bg-[#ff385c] text-white'
+                        : 'border border-hairline text-ink hover:bg-surface-soft'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                )
+              )}
+
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === pagination.last_page}
+                className="px-3 py-1.5 rounded-full border border-hairline text-body-sm font-semibold text-ink disabled:opacity-40 disabled:cursor-not-allowed hover:bg-surface-soft transition-colors"
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 export default function Profile() {
   const [user, setUser] = useState(null);
-  const [transactions, setTransactions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [successBanner, setSuccessBanner] = useState(null);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
@@ -78,7 +392,6 @@ export default function Profile() {
         navigate('/login');
         return;
       }
-
       try {
         setIsLoading(true);
         const userRes = await axios.get(`${API_URL}/api/user`, {
@@ -90,13 +403,6 @@ export default function Profile() {
           city: userRes.data.city || '',
           postal_code: userRes.data.postal_code || '',
         });
-
-        const txRes = await axios.get(`${API_URL}/api/user/transactions`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const txData = txRes.data?.data || txRes.data || [];
-        setTransactions(txData);
-
       } catch (error) {
         console.error('Error fetching profile data:', error);
         if (error.response?.status === 401) {
@@ -108,17 +414,10 @@ export default function Profile() {
         setIsLoading(false);
       }
     };
-
     fetchProfileData();
   }, [navigate]);
 
   const hasAddress = !!(user?.address && user?.city && user?.postal_code);
-
-  const handleTransactionExpire = (transactionId) => {
-    setTransactions(prev => prev.map(tx =>
-      tx.id === transactionId ? { ...tx, status: 'dibatalkan' } : tx
-    ));
-  };
 
   const handleSaveAddress = async (e) => {
     e.preventDefault();
@@ -228,99 +527,7 @@ export default function Profile() {
           {/* Sisi Kanan: Histori Transaksi */}
           <div className="w-full md:flex-1">
             <h3 className="text-title-md font-bold mb-6">Pesanan Saya</h3>
-
-            {transactions.length === 0 ? (
-              <div className="p-8 text-center border border-hairline border-dashed rounded-[14px] bg-surface-soft">
-                <p className="text-body-md text-muted">Belum ada transaksi.</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {transactions.map((tx) => {
-                  const isSuccess = tx.status === 'selesai' || tx.status === 'dibayar';
-                  const isPending = tx.status === 'pending';
-
-                  let statusClass = 'bg-surface-strong text-muted border-hairline';
-                  if (isSuccess) statusClass = 'bg-[#e8f5e9] text-[#2e7d32] border-[#c8e6c9]';
-                  else if (isPending) statusClass = 'bg-[#fff3cd] text-[#856404] border-[#ffeeba]';
-
-                  const hasItems = tx.items && tx.items.length > 0;
-                  const displayItems = hasItems
-                    ? tx.items
-                    : tx.book ? [{ book: tx.book, quantity: 1, price: tx.total_amount }] : [];
-
-                  return (
-                    <Link
-                      key={tx.id}
-                      to={`/profile/orders/${tx.id}`}
-                      className="block border border-hairline rounded-[14px] p-5 bg-canvas transition-shadow hover:shadow-sm hover:border-ink/10"
-                    >
-                      {/* Order Header */}
-                      <div className="flex items-center justify-between mb-3 pb-3 border-b border-hairline-soft">
-                        <div className="flex items-center gap-2">
-                          <span className="text-caption-sm text-muted">{tx.order_number}</span>
-                          <span className="text-caption-sm text-muted">•</span>
-                          <span className="text-caption-sm text-muted">{formatDate(tx.created_at)}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider border ${statusClass}`}>
-                            {tx.status}
-                          </span>
-                          <ChevronRight className="w-4 h-4 text-muted" />
-                        </div>
-                      </div>
-
-                      {/* Items */}
-                      <div className="space-y-3">
-                        {displayItems.map((item, idx) => (
-                          <div key={idx} className="flex items-start gap-3">
-                            <div className="w-12 h-16 bg-surface-strong rounded-sm overflow-hidden shrink-0">
-                              {item.book?.cover_photo ? (
-                                <img
-                                  src={item.book.cover_photo.startsWith('http') ? item.book.cover_photo : `${API_URL}/storage/covers/${item.book.cover_photo}`}
-                                  alt={item.book.title}
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center text-muted text-xs">No img</div>
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-body-sm font-semibold text-ink leading-tight line-clamp-1">{item.book?.title || 'Buku Dihapus'}</p>
-                              {hasItems && <p className="text-caption-sm text-muted mt-0.5">Qty: {item.quantity} × {formatRupiah(item.price)}</p>}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Total + countdown */}
-                      <div className="flex justify-between items-center mt-3 pt-3 border-t border-hairline-soft">
-                        {isPending ? (
-                          <PendingCountdownBadge
-                            createdAt={tx.created_at}
-                            transactionId={tx.id}
-                            onExpire={handleTransactionExpire}
-                          />
-                        ) : (
-                          <div />
-                        )}
-                        <div className="text-right">
-                          <span className="text-caption-sm text-muted block">Total Belanja</span>
-                          <span className="text-body-md font-bold text-ink">{formatRupiah(tx.total_amount)}</span>
-                        </div>
-                      </div>
-
-                      {/* Payment type badge */}
-                      {tx.payment_type && (
-                        <div className="mt-2 flex items-center gap-1.5">
-                          <span className="text-caption-sm text-muted">Dibayar via</span>
-                          <span className="text-caption-sm font-semibold text-ink capitalize">{tx.payment_type.replace('_', ' ')}</span>
-                        </div>
-                      )}
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
+            <OrdersTable />
           </div>
 
         </div>
