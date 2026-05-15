@@ -61,7 +61,10 @@ export default function ChatWidget() {
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('user_role');
   if (!token || role !== 'user') return null;
+  return <ChatWidgetInner token={token} />;
+}
 
+function ChatWidgetInner({ token }) {
   const [open, setOpen] = useState(false);
   const [conversationId, setConversationId] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -74,6 +77,7 @@ export default function ChatWidget() {
   const [unreadCount, setUnreadCount] = useState(0);
   const bottomRef = useRef(null);
   const fileRef = useRef(null);
+  const notifTimerRef = useRef(null);
   const headers = { Authorization: `Bearer ${token}` };
 
   const authAxios = useCallback((config) => axios({ ...config, headers }), [token]);
@@ -109,7 +113,8 @@ export default function ChatWidget() {
             setUnreadCount(c => c + newAdminMsgs.length);
             if (!open) {
               setNotification(newAdminMsgs[newAdminMsgs.length - 1].body?.slice(0, 50) ?? 'Pesan baru');
-              setTimeout(() => setNotification(null), 6000);
+              if (notifTimerRef.current) clearTimeout(notifTimerRef.current);
+              notifTimerRef.current = setTimeout(() => setNotification(null), 6000);
             }
           }
         }).catch(() => {});
@@ -118,15 +123,26 @@ export default function ChatWidget() {
   }, [lastId, open]);
 
   useEffect(() => {
+    return () => {
+      if (notifTimerRef.current) clearTimeout(notifTimerRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
     if (open) {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
       setUnreadCount(0);
       setNotification(null);
       if (conversationId) {
         authAxios({ method: 'put', url: `${API_URL}/api/conversations/read` }).catch(() => {});
       }
     }
-  }, [open, messages.length]);
+  }, [open]);
+
+  useEffect(() => {
+    if (open) {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
 
   const sendMessage = async (payload) => {
     setSending(true);
