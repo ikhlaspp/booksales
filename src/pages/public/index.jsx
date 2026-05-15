@@ -89,25 +89,6 @@ const BookCard = ({ book, style }) => {
           loading="lazy"
         />
 
-        {/* Wishlist heart — decorative, top-right */}
-        <button
-          type="button"
-          aria-label={`Simpan ${book.title}`}
-          onClick={(e) => e.preventDefault()}
-          className="absolute top-3 right-3 flex items-center justify-center w-8 h-8 rounded-full transition-transform hover:scale-110 focus:outline-none"
-          style={{ background: 'rgba(0,0,0,0)', color: 'white' }}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            className="w-6 h-6 drop-shadow-md"
-            fill="rgba(0,0,0,0.35)"
-            stroke="white"
-            strokeWidth="1.5"
-          >
-            <path d="M20.8 4.6c-1.7-1.8-4.4-1.8-6.1 0L12 7.3l-2.7-2.7c-1.7-1.8-4.4-1.8-6.1 0-1.7 1.8-1.7 4.7 0 6.5L12 21l8.8-10c1.7-1.8 1.7-4.7 0-6.4Z" />
-          </svg>
-        </button>
-
         {/* Genre badge — top-left */}
         {book.genre?.name && (
           <span
@@ -212,7 +193,7 @@ export default function MainCatalog() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeSearch, setActiveSearch] = useState('');
   const [selectedGenre, setSelectedGenre] = useState(null);
-  
+
   // Pagination States
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
@@ -247,7 +228,7 @@ export default function MainCatalog() {
       if (selectedGenre) params.genre_id = selectedGenre;
 
       const response = await axios.get(`${API_BASE_URL}/catalog`, { params });
-      
+
       const booksData = response.data?.data ?? response.data ?? [];
       setBooks(Array.isArray(booksData) ? booksData : []);
 
@@ -341,12 +322,12 @@ export default function MainCatalog() {
               boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
             }}
             onMouseEnter={(e) =>
-              (e.currentTarget.style.boxShadow =
-                'rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px, rgba(0,0,0,0.1) 0 4px 8px')
+            (e.currentTarget.style.boxShadow =
+              'rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px, rgba(0,0,0,0.1) 0 4px 8px')
             }
             onMouseLeave={(e) =>
-              (e.currentTarget.style.boxShadow =
-                '0 1px 2px rgba(0,0,0,0.04)')
+            (e.currentTarget.style.boxShadow =
+              '0 1px 2px rgba(0,0,0,0.04)')
             }
           >
             <Search
@@ -523,11 +504,11 @@ export default function MainCatalog() {
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-            
+
             <span className="text-body-sm font-medium text-ink">
               Halaman {currentPage} dari {lastPage}
             </span>
-            
+
             <button
               onClick={() => setCurrentPage(p => Math.min(lastPage, p + 1))}
               disabled={currentPage === lastPage}
