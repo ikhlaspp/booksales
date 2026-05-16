@@ -99,7 +99,7 @@ function InvoiceDocument({ tx, displayItems }) {
       >
         <div>
           <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#ff385c', margin: 0 }}>
-            BookSales
+            PustakaIkhlas
           </h1>
           <p style={{ margin: '4px 0 0', color: '#666', fontSize: '11px' }}>Toko Buku Online</p>
         </div>
@@ -281,7 +281,7 @@ function InvoiceDocument({ tx, displayItems }) {
           fontSize: '11px',
         }}
       >
-        <p style={{ margin: 0 }}>Terima kasih atas pembelian Anda di BookSales</p>
+        <p style={{ margin: 0 }}>Terima kasih atas pembelian Anda di PustakaIkhlas</p>
       </div>
     </div>
   );

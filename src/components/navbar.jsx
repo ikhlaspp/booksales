@@ -68,10 +68,8 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-20">
 
             <Link to="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-rausch rounded-sm flex items-center justify-center shadow-sm">
-                <span className="text-white font-bold text-xl">B</span>
-              </div>
-              <span className="text-lg font-semibold tracking-tight text-ink">BookSales.</span>
+              <img src="/favicon.svg" alt="PustakaIkhlas" className="w-10 h-10 rounded-sm shadow-sm" />
+              <span className="text-lg font-semibold tracking-tight text-ink">PustakaIkhlas.</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-8">

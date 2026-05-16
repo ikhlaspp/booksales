@@ -7,7 +7,7 @@ export default function About() {
       <section className="max-w-7xl mx-auto px-6 md:px-12 pt-20 pb-16">
         <div className="max-w-3xl space-y-6">
           <h1 className="text-display-xl font-bold tracking-tight text-ink">
-            Tentang BookSales
+            Tentang PustakaIkhlas
           </h1>
           <p className="text-display-lg text-muted font-medium leading-snug">
             Kami hadir untuk memberikan pengalaman terbaik dalam menjelajahi katalog dan memesan buku fisik cetak favorit Anda, langsung ke depan pintu rumah Anda.
@@ -20,7 +20,7 @@ export default function About() {
         <div className="w-full h-64 md:h-[400px] bg-surface-soft rounded-[14px] overflow-hidden relative border border-hairline">
           <img 
             src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
-            alt="Toko Buku Fisik BookSales" 
+            alt="Toko Buku Fisik PustakaIkhlas" 
             className="w-full h-full object-cover"
           />
         </div>

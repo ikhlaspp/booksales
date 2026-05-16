@@ -34,10 +34,8 @@ export default function AdminLayout() {
       {/* Sidebar Panel */}
       <aside className={`bg-canvas border-r border-hairline flex-col hidden md:flex transition-all duration-300 ${isSidebarExpanded ? 'w-64' : 'w-20'}`}>
         <div className={`h-20 flex items-center border-b border-hairline ${isSidebarExpanded ? 'px-6' : 'justify-center'}`}>
-          <div className="w-10 h-10 flex-shrink-0 bg-rausch rounded-sm flex items-center justify-center shadow-sm">
-            <span className="text-white font-bold text-xl">B</span>
-          </div>
-          {isSidebarExpanded && <span className="text-lg font-semibold tracking-tight text-ink ml-3 whitespace-nowrap overflow-hidden">BookSales.</span>}
+          <img src="/favicon.svg" alt="PustakaIkhlas" className="w-10 h-10 flex-shrink-0 rounded-sm shadow-sm" />
+          {isSidebarExpanded && <span className="text-lg font-semibold tracking-tight text-ink ml-3 whitespace-nowrap overflow-hidden">PustakaIkhlas.</span>}
         </div>
 
         <nav className={`flex-1 overflow-y-auto py-6 space-y-1.5 ${isSidebarExpanded ? 'px-4' : 'px-2'}`}>
