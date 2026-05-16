@@ -10,6 +10,7 @@ import Login from './pages/auth/login';
 import Register from './pages/auth/register';
 import Profile from './pages/profile/index';
 import OrderDetail from './pages/profile/OrderDetail';
+import EditProfile from './pages/profile/EditProfile';
 import Cart from './pages/public/cart/index';
 import Checkout from './pages/public/checkout/index';
 import AdminDashboard from './pages/admin/index';
@@ -44,6 +45,7 @@ export default function App() {
             <Route path="/profile" element={<PublicLayout />}>
               <Route index element={<Profile />} />
               <Route path="orders/:id" element={<OrderDetail />} />
+              <Route path="edit" element={<EditProfile />} />
             </Route>
             <Route path="/checkout" element={<PublicLayout />}>
               <Route index element={<Checkout />} />
