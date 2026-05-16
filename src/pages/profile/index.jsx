@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { CheckCircle2, X, MapPin, Clock, Search } from 'lucide-react';
+import { CheckCircle2, X, Clock, Search } from 'lucide-react';
 import { useCountdown } from '../../hooks/useCountdown';
 
 const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
@@ -372,9 +372,6 @@ export default function Profile() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [successBanner, setSuccessBanner] = useState(null);
-  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-  const [addressForm, setAddressForm] = useState({ address: '', city: '', postal_code: '' });
-  const [savingAddress, setSavingAddress] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -398,11 +395,6 @@ export default function Profile() {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUser(userRes.data);
-        setAddressForm({
-          address: userRes.data.address || '',
-          city: userRes.data.city || '',
-          postal_code: userRes.data.postal_code || '',
-        });
       } catch (error) {
         console.error('Error fetching profile data:', error);
         if (error.response?.status === 401) {
@@ -416,25 +408,6 @@ export default function Profile() {
     };
     fetchProfileData();
   }, [navigate]);
-
-  const hasAddress = !!(user?.address && user?.city && user?.postal_code);
-
-  const handleSaveAddress = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem('token');
-    try {
-      setSavingAddress(true);
-      const res = await axios.put(`${API_URL}/api/user/profile`, addressForm, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setUser(res.data);
-      setIsAddressModalOpen(false);
-    } catch (err) {
-      console.error('Failed to save address:', err);
-    } finally {
-      setSavingAddress(false);
-    }
-  };
 
   if (isLoading) {
     return (
@@ -478,45 +451,27 @@ export default function Profile() {
               <h2 className="text-title-lg font-bold text-ink mb-1">{user.name}</h2>
               <p className="text-body-sm text-muted mb-4">{user.email}</p>
 
+              <Link
+                to="/profile/edit"
+                className="border border-hairline rounded-full px-4 py-1.5 text-body-sm font-semibold text-ink hover:bg-surface-soft transition-colors mb-4"
+              >
+                Edit Profil
+              </Link>
+
               <div className="w-full border-t border-hairline pt-4 mt-2">
                 <div className="flex flex-col items-start text-left w-full space-y-3">
-                  <div>
-                    <span className="text-caption-sm text-muted block mb-0.5">Role Akun</span>
-                    <span className="text-body-sm font-semibold capitalize bg-surface-strong px-2 py-0.5 rounded-sm">{user.role}</span>
-                  </div>
                   <div>
                     <span className="text-caption-sm text-muted block mb-0.5">Bergabung Sejak</span>
                     <span className="text-body-sm font-medium">{formatDate(user.created_at)}</span>
                   </div>
                   <div className="w-full pt-3 border-t border-hairline-soft">
                     <span className="text-caption-sm text-muted block mb-2">Alamat Pengiriman</span>
-                    {hasAddress ? (
-                      <div className="text-left">
-                        <p className="text-body-sm text-ink leading-relaxed">
-                          {user.address}<br />{user.city}, {user.postal_code}
-                        </p>
-                        <button
-                          onClick={() => {
-                            setAddressForm({
-                              address: user.address || '',
-                              city: user.city || '',
-                              postal_code: user.postal_code || '',
-                            });
-                            setIsAddressModalOpen(true);
-                          }}
-                          className="text-caption-sm font-semibold text-rausch hover:underline mt-1.5"
-                        >
-                          Edit Alamat
-                        </button>
-                      </div>
+                    {user.address ? (
+                      <p className="text-body-sm text-ink leading-relaxed">
+                        {user.address}<br />{user.city}, {user.postal_code}
+                      </p>
                     ) : (
-                      <button
-                        onClick={() => setIsAddressModalOpen(true)}
-                        className="w-full border border-dashed border-hairline rounded-md py-2.5 text-caption-sm font-semibold text-muted hover:border-ink hover:text-ink transition-colors flex items-center justify-center gap-1.5"
-                      >
-                        <MapPin className="w-3.5 h-3.5" />
-                        + Tambah Alamat
-                      </button>
+                      <p className="text-body-sm text-muted italic">Belum ada alamat</p>
                     )}
                   </div>
                 </div>
@@ -533,65 +488,6 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* Address Modal */}
-      {isAddressModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 backdrop-blur-sm">
-          <div className="bg-canvas w-full max-w-md rounded-[20px] shadow-[0_8px_30px_rgba(0,0,0,0.12)] overflow-hidden">
-            <div className="flex items-center justify-between p-6 border-b border-hairline">
-              <h3 className="text-title-md font-bold text-ink">Alamat Pengiriman</h3>
-              <button onClick={() => setIsAddressModalOpen(false)} className="text-muted hover:text-ink transition-colors">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <form onSubmit={handleSaveAddress} className="p-6 space-y-4">
-              <div>
-                <label className="block text-body-sm font-semibold text-ink mb-1.5">Nama Jalan & Detail Rumah</label>
-                <textarea
-                  required
-                  value={addressForm.address}
-                  onChange={(e) => setAddressForm({ ...addressForm, address: e.target.value })}
-                  className="w-full px-4 py-3 bg-surface-soft border border-hairline rounded-md focus:outline-none focus:border-ink focus:bg-canvas transition-colors text-body-md"
-                  placeholder="Jl. Contoh No. 123, RT 01/RW 02"
-                  rows="3"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-body-sm font-semibold text-ink mb-1.5">Kota / Kabupaten</label>
-                  <input
-                    type="text"
-                    required
-                    value={addressForm.city}
-                    onChange={(e) => setAddressForm({ ...addressForm, city: e.target.value })}
-                    className="w-full px-4 py-3 bg-surface-soft border border-hairline rounded-md focus:outline-none focus:border-ink focus:bg-canvas transition-colors text-body-md"
-                    placeholder="Jakarta Selatan"
-                  />
-                </div>
-                <div>
-                  <label className="block text-body-sm font-semibold text-ink mb-1.5">Kode Pos</label>
-                  <input
-                    type="text"
-                    required
-                    value={addressForm.postal_code}
-                    onChange={(e) => setAddressForm({ ...addressForm, postal_code: e.target.value })}
-                    className="w-full px-4 py-3 bg-surface-soft border border-hairline rounded-md focus:outline-none focus:border-ink focus:bg-canvas transition-colors text-body-md"
-                    placeholder="12345"
-                  />
-                </div>
-              </div>
-              <div className="pt-4">
-                <button
-                  type="submit"
-                  disabled={savingAddress}
-                  className="w-full py-3.5 bg-ink text-white rounded-full font-bold text-button-md transition-all hover:opacity-90 disabled:opacity-50"
-                >
-                  {savingAddress ? 'Menyimpan...' : 'Simpan Alamat'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
