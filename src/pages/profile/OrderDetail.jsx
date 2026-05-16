@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, MapPin, Clock, Lock, AlertCircle, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, MapPin, Clock, Lock, AlertCircle, ShieldCheck, Download, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import { useCountdown } from '../../hooks/useCountdown';
 
@@ -70,6 +70,221 @@ function CountdownTimer({ createdAt }) {
   );
 }
 
+function InvoiceDocument({ tx, displayItems }) {
+  const formatRp = (amount) =>
+    'Rp ' + new Intl.NumberFormat('id-ID').format(amount ?? 0);
+
+  return (
+    <div
+      id="invoice-content"
+      style={{
+        width: '210mm',
+        padding: '20mm',
+        fontFamily: 'Arial, sans-serif',
+        fontSize: '12px',
+        color: '#1a1a1a',
+        backgroundColor: '#ffffff',
+      }}
+    >
+      {/* Header */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          marginBottom: '24px',
+          paddingBottom: '16px',
+          borderBottom: '2px solid #ff385c',
+        }}
+      >
+        <div>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#ff385c', margin: 0 }}>
+            BookSales
+          </h1>
+          <p style={{ margin: '4px 0 0', color: '#666', fontSize: '11px' }}>Toko Buku Online</p>
+        </div>
+        <div style={{ textAlign: 'right' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1a1a1a', margin: 0 }}>
+            INVOICE
+          </h2>
+          <p style={{ margin: '4px 0 0', color: '#666', fontSize: '11px' }}>{tx.order_number}</p>
+        </div>
+      </div>
+
+      {/* Customer + Invoice Details */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px' }}>
+        <div style={{ flex: 1 }}>
+          <p
+            style={{
+              fontWeight: 'bold',
+              marginBottom: '8px',
+              fontSize: '11px',
+              textTransform: 'uppercase',
+              color: '#666',
+            }}
+          >
+            Kepada:
+          </p>
+          <p style={{ margin: '2px 0', fontWeight: '600' }}>{tx.customer?.name || '-'}</p>
+          {tx.shipping_address && (
+            <p style={{ margin: '2px 0', color: '#444' }}>{tx.shipping_address}</p>
+          )}
+          {tx.city && (
+            <p style={{ margin: '2px 0', color: '#444' }}>
+              {tx.city}
+              {tx.postal_code ? `, ${tx.postal_code}` : ''}
+            </p>
+          )}
+        </div>
+        <div style={{ textAlign: 'right' }}>
+          <table style={{ marginLeft: 'auto', borderCollapse: 'collapse' }}>
+            <tbody>
+              <tr>
+                <td style={{ color: '#666', paddingRight: '12px', paddingBottom: '4px' }}>
+                  Tanggal
+                </td>
+                <td style={{ fontWeight: '600', paddingBottom: '4px' }}>
+                  {new Date(tx.created_at).toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                  })}
+                </td>
+              </tr>
+              <tr>
+                <td style={{ color: '#666', paddingRight: '12px', paddingBottom: '4px' }}>
+                  Status
+                </td>
+                <td style={{ fontWeight: '600', paddingBottom: '4px' }}>
+                  {tx.status
+                    ? tx.status.charAt(0).toUpperCase() + tx.status.slice(1)
+                    : '-'}
+                </td>
+              </tr>
+              {tx.payment_type && (
+                <tr>
+                  <td style={{ color: '#666', paddingRight: '12px' }}>Pembayaran</td>
+                  <td style={{ fontWeight: '600' }}>
+                    {tx.payment_type.replace(/_/g, ' ')}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Items Table */}
+      <table
+        style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '24px' }}
+      >
+        <thead>
+          <tr style={{ backgroundColor: '#f5f5f5' }}>
+            {['Buku', 'Qty', 'Harga Satuan', 'Subtotal'].map((h, i) => (
+              <th
+                key={h}
+                style={{
+                  padding: '10px 8px',
+                  textAlign: i === 0 ? 'left' : i === 1 ? 'center' : 'right',
+                  fontSize: '11px',
+                  fontWeight: '600',
+                  textTransform: 'uppercase',
+                  color: '#666',
+                  borderBottom: '1px solid #ddd',
+                }}
+              >
+                {h}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {displayItems.map((item, idx) => (
+            <tr key={idx} style={{ borderBottom: '1px solid #eee' }}>
+              <td style={{ padding: '10px 8px', color: '#1a1a1a' }}>
+                {item.book?.title || 'Buku Dihapus'}
+              </td>
+              <td style={{ padding: '10px 8px', textAlign: 'center', color: '#1a1a1a' }}>
+                {item.quantity}
+              </td>
+              <td style={{ padding: '10px 8px', textAlign: 'right', color: '#1a1a1a' }}>
+                {formatRp(item.price)}
+              </td>
+              <td
+                style={{
+                  padding: '10px 8px',
+                  textAlign: 'right',
+                  fontWeight: '600',
+                  color: '#1a1a1a',
+                }}
+              >
+                {formatRp(item.quantity * item.price)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Totals */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '32px' }}>
+        <table style={{ minWidth: '240px', borderCollapse: 'collapse' }}>
+          <tbody>
+            <tr>
+              <td style={{ padding: '4px 12px 4px 0', color: '#666' }}>Subtotal</td>
+              <td style={{ padding: '4px 0', textAlign: 'right' }}>
+                {formatRp(tx.subtotal)}
+              </td>
+            </tr>
+            <tr>
+              <td style={{ padding: '4px 12px 4px 0', color: '#666' }}>Pajak (11%)</td>
+              <td style={{ padding: '4px 0', textAlign: 'right' }}>
+                {formatRp(tx.tax_amount)}
+              </td>
+            </tr>
+            <tr>
+              <td style={{ padding: '4px 12px 4px 0', color: '#666' }}>Ongkos Kirim</td>
+              <td style={{ padding: '4px 0', textAlign: 'right' }}>
+                {formatRp(tx.shipping_cost)}
+              </td>
+            </tr>
+            <tr style={{ borderTop: '2px solid #1a1a1a' }}>
+              <td
+                style={{ padding: '10px 12px 4px 0', fontWeight: 'bold', fontSize: '14px' }}
+              >
+                Total
+              </td>
+              <td
+                style={{
+                  padding: '10px 0 4px',
+                  textAlign: 'right',
+                  fontWeight: 'bold',
+                  fontSize: '14px',
+                  color: '#ff385c',
+                }}
+              >
+                {formatRp(tx.total_amount)}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {/* Footer */}
+      <div
+        style={{
+          borderTop: '1px solid #ddd',
+          paddingTop: '16px',
+          textAlign: 'center',
+          color: '#666',
+          fontSize: '11px',
+        }}
+      >
+        <p style={{ margin: 0 }}>Terima kasih atas pembelian Anda di BookSales</p>
+      </div>
+    </div>
+  );
+}
+
 export default function OrderDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -77,6 +292,29 @@ export default function OrderDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [isPaying, setIsPaying] = useState(false);
   const snapLoaded = useRef(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleDownloadInvoice = async () => {
+    setIsGenerating(true);
+    try {
+      const html2pdf = (await import('html2pdf.js')).default;
+      const el = document.getElementById('invoice-content');
+      await html2pdf()
+        .set({
+          margin: 0,
+          filename: `invoice-${tx.order_number}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        })
+        .from(el)
+        .save();
+    } catch {
+      alert('Gagal membuat invoice. Coba lagi.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   // Compute expiry before conditional returns so the hook call is always at top level
   const expiresAt = tx ? new Date(tx.created_at).getTime() + 60 * 60 * 1000 : 0;
@@ -170,9 +408,30 @@ export default function OrderDetail() {
                 <p className="text-caption-sm text-muted mb-1">Status Pesanan</p>
                 <StatusBadge status={tx.status} />
               </div>
-              <div className="text-right">
-                <p className="text-caption-sm text-muted mb-1">Tanggal Pesanan</p>
-                <p className="text-body-sm font-medium text-ink">{formatDate(tx.created_at)}</p>
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="text-right">
+                  <p className="text-caption-sm text-muted mb-1">Tanggal Pesanan</p>
+                  <p className="text-body-sm font-medium text-ink">{formatDate(tx.created_at)}</p>
+                </div>
+                {['dibayar', 'dikirim', 'selesai'].includes(tx.status) && (
+                  <button
+                    onClick={handleDownloadInvoice}
+                    disabled={isGenerating}
+                    className="flex items-center gap-1.5 border border-hairline rounded-[8px] px-3 py-1.5 text-sm text-muted hover:bg-surface-soft transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isGenerating ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Membuat PDF...
+                      </>
+                    ) : (
+                      <>
+                        <Download className="w-4 h-4" />
+                        Download Invoice
+                      </>
+                    )}
+                  </button>
+                )}
               </div>
             </div>
 
@@ -282,6 +541,13 @@ export default function OrderDetail() {
 
         </div>
       </div>
+
+      {/* Off-screen invoice for PDF generation */}
+      {tx && (
+        <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
+          <InvoiceDocument tx={tx} displayItems={displayItems} />
+        </div>
+      )}
     </div>
   );
 }
