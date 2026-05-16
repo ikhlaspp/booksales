@@ -7,7 +7,6 @@ export default function Register() {
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
-        username: '',
         password: '',
     });
 
@@ -26,10 +25,6 @@ export default function Register() {
             newErrors.email = "Email tidak boleh kosong";
         } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
             newErrors.email = "Format email tidak valid";
-        }
-
-        if (!formData.username.trim()) {
-            newErrors.username = "Username tidak boleh kosong";
         }
 
         if (!formData.password) {
@@ -63,15 +58,53 @@ export default function Register() {
         setIsLoading(true);
 
         try {
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            const response = await fetch('http://localhost:8000/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: formData.fullName,
+                    email: formData.email,
+                    password: formData.password,
+                }),
+            });
 
-            console.log("Data Pendaftaran Berhasil:", formData);
+            const data = await response.json();
 
-            alert("Registrasi berhasil! Silakan login.");
-            navigate('/login');
+            if (response.status === 422) {
+                const apiErrors = {};
+                if (data.errors) {
+                    if (data.errors.name) apiErrors.fullName = data.errors.name[0];
+                    if (data.errors.email) apiErrors.email = data.errors.email[0];
+                    if (data.errors.password) apiErrors.password = data.errors.password[0];
+                } else {
+                    apiErrors.submit = data.message || 'Validasi gagal.';
+                }
+                setErrors(apiErrors);
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Registrasi gagal. Silakan coba lagi.');
+            }
+
+            const token = data?.access_token;
+            const user = data?.user;
+            const userRole = data?.role || user?.role || 'user';
+
+            localStorage.setItem('token', token);
+            localStorage.setItem('user_id', user?.id || '');
+            localStorage.setItem('user_name', user?.name || '');
+            localStorage.setItem('user_role', userRole);
+
+            window.dispatchEvent(new Event('authChange'));
+
+            navigate('/profile');
 
         } catch (error) {
-            setErrors({ submit: "Terjadi kesalahan pada sistem. Silakan coba lagi." });
+            setErrors({ submit: error.message || "Terjadi kesalahan pada sistem. Silakan coba lagi." });
         } finally {
             setIsLoading(false);
         }
@@ -126,21 +159,6 @@ export default function Register() {
                             />
                         </div>
                         {errors.email && <p className="mt-1 pl-1 text-[12px] font-medium text-[#c13515]">{errors.email}</p>}
-                    </div>
-
-                    <div>
-                        <div className={`relative h-[56px] rounded-[8px] border bg-[#ffffff] transition-colors focus-within:border-2 focus-within:border-[#222222] ${errors.username ? 'border-[#c13515]' : 'border-[#dddddd]'}`}>
-                            <label className="absolute left-3 top-2 text-[12px] font-medium text-[#6a6a6a]">Username</label>
-                            <input
-                                type="text"
-                                name="username"
-                                value={formData.username}
-                                onChange={handleChange}
-                                className="absolute bottom-0 left-0 w-full bg-transparent px-3 pb-2 pt-6 text-[16px] text-[#222222] outline-none"
-                                placeholder="user123"
-                            />
-                        </div>
-                        {errors.username && <p className="mt-1 pl-1 text-[12px] font-medium text-[#c13515]">{errors.username}</p>}
                     </div>
 
                     <div>
