@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ArrowLeft } from 'lucide-react';
@@ -7,6 +7,9 @@ const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 export default function EditProfile() {
   const navigate = useNavigate();
+
+  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [fetchError, setFetchError] = useState('');
 
   const [infoForm, setInfoForm] = useState({ name: '', email: '', address: '', city: '', postal_code: '' });
   const [infoError, setInfoError] = useState('');
@@ -17,6 +20,9 @@ export default function EditProfile() {
   const [pwError, setPwError] = useState('');
   const [pwSuccess, setPwSuccess] = useState('');
   const [savingPw, setSavingPw] = useState(false);
+
+  const infoSuccessTimerRef = useRef(null);
+  const pwSuccessTimerRef = useRef(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -35,11 +41,22 @@ export default function EditProfile() {
           postal_code: u.postal_code || '',
         });
       } catch (err) {
-        if (err.response?.status === 401) navigate('/login');
+        if (err.response?.status === 401) {
+          navigate('/login');
+        } else {
+          setFetchError('Gagal memuat data profil. Coba lagi.');
+        }
+      } finally {
+        setLoadingProfile(false);
       }
     };
     fetchUser();
   }, [navigate]);
+
+  useEffect(() => () => {
+    clearTimeout(infoSuccessTimerRef.current);
+    clearTimeout(pwSuccessTimerRef.current);
+  }, []);
 
   const handleSaveInfo = async (e) => {
     e.preventDefault();
@@ -48,12 +65,14 @@ export default function EditProfile() {
     setSavingInfo(true);
     try {
       const token = localStorage.getItem('token');
+      if (!token) { navigate('/login'); return; }
       const res = await axios.put(`${API_URL}/api/user/profile`, infoForm, {
         headers: { Authorization: `Bearer ${token}` },
       });
       localStorage.setItem('user_name', res.data.name);
       setInfoSuccess('Perubahan berhasil disimpan.');
-      setTimeout(() => setInfoSuccess(''), 3000);
+      clearTimeout(infoSuccessTimerRef.current);
+      infoSuccessTimerRef.current = setTimeout(() => setInfoSuccess(''), 3000);
     } catch (err) {
       if (err.response?.status === 422) {
         const data = err.response.data;
@@ -89,14 +108,17 @@ export default function EditProfile() {
       return;
     }
 
+    const token = localStorage.getItem('token');
+    if (!token) { navigate('/login'); return; }
     setSavingPw(true);
     try {
-      const token = localStorage.getItem('token');
       await axios.put(`${API_URL}/api/user/password`, pwForm, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPwForm({ current_password: '', new_password: '', new_password_confirmation: '' });
       setPwSuccess('Password berhasil diubah.');
+      clearTimeout(pwSuccessTimerRef.current);
+      pwSuccessTimerRef.current = setTimeout(() => setPwSuccess(''), 3000);
     } catch (err) {
       if (err.response?.status === 422) {
         setPwError(err.response.data.message || 'Validasi gagal.');
@@ -110,6 +132,14 @@ export default function EditProfile() {
 
   const inputClass = 'w-full px-4 py-3 bg-surface-soft border border-hairline rounded-md focus:outline-none focus:border-ink focus:bg-canvas transition-colors text-body-md';
   const labelClass = 'block text-body-sm font-semibold text-ink mb-1.5';
+
+  if (loadingProfile) {
+    return (
+      <div className="min-h-screen bg-canvas pt-24 flex justify-center items-start">
+        <div className="w-8 h-8 border-4 border-hairline border-t-rausch rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-canvas min-h-screen text-ink pb-20">
@@ -125,13 +155,20 @@ export default function EditProfile() {
 
         <h1 className="text-display-xl font-bold mb-8">Edit Profil</h1>
 
+        {fetchError && (
+          <div className="mb-6 bg-[#fde8ec] border border-[#f5c6cb] rounded-[14px] p-4">
+            <p className="text-[#e00b41] text-body-sm font-medium">{fetchError}</p>
+          </div>
+        )}
+
         {/* Card 1 — Informasi Akun */}
         <div className="bg-canvas border border-hairline rounded-[14px] p-6 mb-6">
           <h2 className="text-title-md font-bold mb-5">Informasi Akun</h2>
           <form onSubmit={handleSaveInfo} className="space-y-4">
             <div>
-              <label className={labelClass}>Nama Lengkap</label>
+              <label htmlFor="edit-name" className={labelClass}>Nama Lengkap</label>
               <input
+                id="edit-name"
                 type="text"
                 value={infoForm.name}
                 onChange={(e) => setInfoForm({ ...infoForm, name: e.target.value })}
@@ -140,8 +177,9 @@ export default function EditProfile() {
               />
             </div>
             <div>
-              <label className={labelClass}>Email</label>
+              <label htmlFor="edit-email" className={labelClass}>Email</label>
               <input
+                id="edit-email"
                 type="email"
                 value={infoForm.email}
                 onChange={(e) => setInfoForm({ ...infoForm, email: e.target.value })}
@@ -150,8 +188,9 @@ export default function EditProfile() {
               />
             </div>
             <div>
-              <label className={labelClass}>Nama Jalan</label>
+              <label htmlFor="edit-address" className={labelClass}>Nama Jalan</label>
               <textarea
+                id="edit-address"
                 value={infoForm.address}
                 onChange={(e) => setInfoForm({ ...infoForm, address: e.target.value })}
                 className={inputClass}
@@ -161,8 +200,9 @@ export default function EditProfile() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className={labelClass}>Kota</label>
+                <label htmlFor="edit-city" className={labelClass}>Kota</label>
                 <input
+                  id="edit-city"
                   type="text"
                   value={infoForm.city}
                   onChange={(e) => setInfoForm({ ...infoForm, city: e.target.value })}
@@ -171,8 +211,9 @@ export default function EditProfile() {
                 />
               </div>
               <div>
-                <label className={labelClass}>Kode Pos</label>
+                <label htmlFor="edit-postal-code" className={labelClass}>Kode Pos</label>
                 <input
+                  id="edit-postal-code"
                   type="text"
                   value={infoForm.postal_code}
                   onChange={(e) => setInfoForm({ ...infoForm, postal_code: e.target.value })}
@@ -200,8 +241,9 @@ export default function EditProfile() {
           <h2 className="text-title-md font-bold mb-5">Ganti Password</h2>
           <form onSubmit={handleChangePassword} className="space-y-4">
             <div>
-              <label className={labelClass}>Password Sekarang</label>
+              <label htmlFor="edit-current-password" className={labelClass}>Password Sekarang</label>
               <input
+                id="edit-current-password"
                 type="password"
                 value={pwForm.current_password}
                 onChange={(e) => setPwForm({ ...pwForm, current_password: e.target.value })}
@@ -210,8 +252,9 @@ export default function EditProfile() {
               />
             </div>
             <div>
-              <label className={labelClass}>Password Baru</label>
+              <label htmlFor="edit-new-password" className={labelClass}>Password Baru</label>
               <input
+                id="edit-new-password"
                 type="password"
                 value={pwForm.new_password}
                 onChange={(e) => setPwForm({ ...pwForm, new_password: e.target.value })}
@@ -220,8 +263,9 @@ export default function EditProfile() {
               />
             </div>
             <div>
-              <label className={labelClass}>Konfirmasi Password Baru</label>
+              <label htmlFor="edit-confirm-password" className={labelClass}>Konfirmasi Password Baru</label>
               <input
+                id="edit-confirm-password"
                 type="password"
                 value={pwForm.new_password_confirmation}
                 onChange={(e) => setPwForm({ ...pwForm, new_password_confirmation: e.target.value })}
