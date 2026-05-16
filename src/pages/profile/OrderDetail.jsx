@@ -144,11 +144,13 @@ function InvoiceDocument({ tx, displayItems }) {
                   Tanggal
                 </td>
                 <td style={{ fontWeight: '600', paddingBottom: '4px' }}>
-                  {new Date(tx.created_at).toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                  })}
+                  {tx.created_at
+                    ? new Date(tx.created_at).toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                      })
+                    : '-'}
                 </td>
               </tr>
               <tr>
@@ -299,6 +301,7 @@ export default function OrderDetail() {
     try {
       const html2pdf = (await import('html2pdf.js')).default;
       const el = document.getElementById('invoice-content');
+      if (!el) { setIsGenerating(false); return; }
       await html2pdf()
         .set({
           margin: 0,
