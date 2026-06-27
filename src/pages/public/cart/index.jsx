@@ -139,7 +139,7 @@ export default function Cart() {
                 </button>
 
                 <p className="text-[11px] text-center text-muted mt-4">
-                  Dengan mengklik Checkout, Anda menyetujui Ketentuan Layanan PustakaIkhlas.
+                  Dengan mengklik Checkout, Anda menyetujui Ketentuan Layanan LiteraNusa.
                 </p>
               </div>
             </div>

@@ -213,7 +213,7 @@ function ChatWidgetInner({ token }) {
           <div className="px-4 py-3 border-b border-hairline bg-canvas flex items-center justify-between">
             <div>
               <p className="font-semibold text-sm text-ink">Chat dengan Admin</p>
-              <p className="text-xs text-muted">PustakaIkhlas Support</p>
+              <p className="text-xs text-muted">LiteraNusa Support</p>
             </div>
             <button onClick={() => setOpen(false)} className="text-muted hover:text-ink transition-colors">
               <ChevronDown className="w-5 h-5" />

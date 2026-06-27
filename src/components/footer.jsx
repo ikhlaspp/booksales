@@ -15,11 +15,11 @@ export default function Footer() {
         <div>
           <h3 className="text-[16px] font-medium text-ink mb-4">Tentang</h3>
           <ul className="space-y-2.5">
-            <li><Link to="/about" className="text-[14px] text-ink hover:underline block">Tentang PustakaIkhlas</Link></li>
+            <li><Link to="/about" className="text-[14px] text-ink hover:underline block">Tentang LiteraNusa</Link></li>
           </ul>
         </div>
         <div>
-          <h3 className="text-[16px] font-medium text-ink mb-4">PustakaIkhlas</h3>
+          <h3 className="text-[16px] font-medium text-ink mb-4">LiteraNusa</h3>
           <ul className="space-y-2.5">
             <li><Link to="/register" className="text-[14px] text-ink hover:underline block">Daftar Akun Baru</Link></li>
           </ul>
@@ -28,7 +28,7 @@ export default function Footer() {
 
       <div className="max-w-7xl mx-auto border-t border-hairline-soft pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[13px] text-muted">
         <div>
-          © {currentYear} PustakaIkhlas. Memudahkan akses literasi Anda.
+          © {currentYear} LiteraNusa. Memudahkan akses literasi Anda.
         </div>
       </div>
     </footer>
